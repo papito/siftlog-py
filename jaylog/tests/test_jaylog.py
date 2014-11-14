@@ -10,6 +10,13 @@ class TestLogger(unittest.TestCase):
     def setUpClass(cls):
         cls.logger = LogAdapter(None)
 
+    def test_arbitrary_constants(self):
+        logger = LogAdapter(None, pid=12345, app='APP NAME')
+        res = json.loads(logger._get_log_stmt(logging.INFO, None))
+        
+        self.assertEquals(res['pid'], 12345)
+        self.assertEquals(res['app'], 'APP NAME')
+
     def test_simple_log_statement(self):
         stmt = 'simple log statement'
         res = json.loads(self.logger._get_log_stmt(logging.DEBUG, stmt))

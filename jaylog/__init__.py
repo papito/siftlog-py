@@ -6,17 +6,22 @@ import datetime
 from string import Template
 
 class LogAdapter(logging.LoggerAdapter):
-    def __init__(self, logger):
+    def __init__(self, logger, **kwargs):
         super(LogAdapter, self).__init__(logger, {})
+        self.constants = kwargs
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
+        msg = msg or ''
         frm = inspect.stack()[3]
         mod = inspect.getmodule(frm[0])
 
+        kwargs['level'] = logging.getLevelName(level)
+
+        # append the optional constants defined on initialization
+        kwargs.update(self.constants)
+
         # add message to the payload, substite with the passed data
         kwargs['msg'] = Template(msg).safe_substitute(kwargs)
-
-        kwargs['level'] = logging.getLevelName(level)
 
         if mod:
             # caller info
