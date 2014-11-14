@@ -8,4 +8,6 @@ setup(name='jaylog',
       author_email='andrei360-git@yahoo.com',
       license='MIT',
       packages=['jaylog'],
-      zip_safe=False)
+      zip_safe=False,
+      setup_requires=['nose>=1.0']
+)

@@ -1,3 +1,4 @@
-jaylog.egg-info
+jaylog.egg*
+nose-*
 *.pyc
 
