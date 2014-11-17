@@ -1,4 +1,4 @@
 jaylog
 ===============
 
-JSON logger - **work in progress**
+JSON logger for Python
