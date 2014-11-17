@@ -20,19 +20,19 @@ class LogAdapter(logging.LoggerAdapter):
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
         msg = msg or ''
-        frm = inspect.stack()[3]
-        mod = inspect.getmodule(frm[0])
 
         kwargs[self.LEVEL] = logging.getLevelName(level)
 
         # append the optional constants defined on initialization
         kwargs.update(self.constants)
 
-        # add message to the payload, substite with the passed data
+        # add message to the payload, substitute with the passed data
         kwargs[self.MESSAGE] = Template(msg).safe_substitute(kwargs)
 
+        # caller info
+        frm = inspect.stack()[3]
+        mod = inspect.getmodule(frm[0])
         if mod:
-            # caller info
             line_no = frm[2]
             method  = frm[3]
             module  = mod.__name__
@@ -55,7 +55,6 @@ class LogAdapter(logging.LoggerAdapter):
 
         try:
             payload = json.dumps(kwargs)
-
         except Exception, ex:
             msg = 'LOGGER EXCEPTION "{0}" in  {1}'.format(str(ex), loc)
             return json.dumps({
