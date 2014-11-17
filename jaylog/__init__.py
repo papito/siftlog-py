@@ -6,6 +6,14 @@ import datetime
 from string import Template
 
 class LogAdapter(logging.LoggerAdapter):
+    MESSAGE    = 'msg'
+    LEVEL      = 'level'
+    LOCATION   = 'loc'
+    TAGS       = 'tags'
+    TIME       = 'time'
+    WITHOUT    = 'without'
+    TAG_PREFIX = 'tag.'
+
     def __init__(self, logger, **kwargs):
         super(LogAdapter, self).__init__(logger, {})
         self.constants = kwargs
@@ -15,33 +23,33 @@ class LogAdapter(logging.LoggerAdapter):
         frm = inspect.stack()[3]
         mod = inspect.getmodule(frm[0])
 
-        kwargs['level'] = logging.getLevelName(level)
+        kwargs[self.LEVEL] = logging.getLevelName(level)
 
         # append the optional constants defined on initialization
         kwargs.update(self.constants)
 
         # add message to the payload, substite with the passed data
-        kwargs['msg'] = Template(msg).safe_substitute(kwargs)
+        kwargs[self.MESSAGE] = Template(msg).safe_substitute(kwargs)
 
         if mod:
             # caller info
             line_no = frm[2]
             method  = frm[3]
             module  = mod.__name__
-            loc = kwargs['loc'] = '%s:%s:%s' % (module, method, line_no)
+            loc = kwargs[self.LOCATION] = '%s:%s:%s' % (module, method, line_no)
 
-        kwargs['time'] = str(datetime.datetime.now()) 
+        kwargs[self.TIME] = str(datetime.datetime.now()) 
 
         if tags:
-            kwargs['tags'] = ['tag.' + tag for tag in tags]
+            kwargs[self.TAGS] = [self.TAG_PREFIX + tag for tag in tags]
 
-        # delete keys we don't want (sometimes to save space and network traffic)
-        if 'without' in kwargs:
-            omit_keys = kwargs.get('without', [])
+        # delete keys we don't want
+        if self.WITHOUT in kwargs:
+            omit_keys = kwargs.get(self.WITHOUT, [])
             for omit_key in omit_keys:
                 if omit_key in kwargs:
                     del kwargs[omit_key]
-            del kwargs['without']
+            del kwargs[self.WITHOUT]
             
         payload = ''
 

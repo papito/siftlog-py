@@ -31,8 +31,19 @@ class TestLogger(unittest.TestCase):
         self.assertEquals(res['msg'], Template(stmt).substitute(data))
         
     def test_tags(self):
-        data = {}
         res = self.logger._get_log_stmt(logging.DEBUG, '', 'TAG1', 'TAG2')
         res = json.loads(res)
 
         self.assertEquals(len(res['tags']), 2)
+        
+    def test_core_fields(self):
+        logger = LogAdapter(None)
+        logger.MESSAGE = 'm'
+        logger.LEVEL = 'l'
+        logger.WITHOUT = 'w'
+        res = logger._get_log_stmt(logging.DEBUG, '', w=[logger.LOCATION])
+        res = json.loads(res)
+        self.assertTrue(logger.MESSAGE in res)
+        self.assertTrue(logger.LEVEL in res)
+        self.assertFalse(logger.LOCATION in res)
+        self.assertFalse(logger.WITHOUT in res)
