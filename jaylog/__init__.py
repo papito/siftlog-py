@@ -2,17 +2,18 @@ import os
 import logging
 import json
 import inspect
-import datetime
+import time
 from string import Template
 
 class LogAdapter(logging.LoggerAdapter):
-    MESSAGE    = 'msg'
-    LEVEL      = 'level'
-    LOCATION   = 'loc'
-    TAGS       = 'tags'
-    TIME       = 'time'
-    WITHOUT    = 'without'
-    TAG_PREFIX = 'tag.'
+    MESSAGE     = 'msg'
+    LEVEL       = 'level'
+    LOCATION    = 'loc'
+    TAGS        = 'tags'
+    TIME        = 'time'
+    WITHOUT     = 'without'
+    TAG_PREFIX  = 'tag.'
+    TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
     def __init__(self, logger, **kwargs):
         super(LogAdapter, self).__init__(logger, {})
@@ -38,7 +39,7 @@ class LogAdapter(logging.LoggerAdapter):
             module  = mod.__name__
             loc = kwargs[self.LOCATION] = '%s:%s:%s' % (module, method, line_no)
 
-        kwargs[self.TIME] = str(datetime.datetime.now()) 
+        kwargs[self.TIME] = self.get_timestamp()
 
         if tags:
             kwargs[self.TAGS] = [self.TAG_PREFIX + tag for tag in tags]
@@ -64,6 +65,9 @@ class LogAdapter(logging.LoggerAdapter):
 
     def to_json(self, data):
         return json.dumps(data)
+
+    def get_timestamp(self):
+        return time.strftime(self.TIME_FORMAT)
 
     def debug(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.DEBUG):
