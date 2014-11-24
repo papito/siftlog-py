@@ -1,6 +1,7 @@
 import unittest
 import json
 import logging
+import datetime
 from string import Template
 from jaylog import LogAdapter
 
@@ -35,6 +36,24 @@ class TestLogger(unittest.TestCase):
         res = json.loads(res)
 
         self.assertEquals(len(res['tags']), 2)
+        
+    def test_custom_adapter(self):
+        datetime_handler = lambda obj: (obj.isoformat() 
+            if isinstance(obj, datetime.datetime) 
+            or isinstance(obj, datetime.date) 
+            else None)
+            
+        class CustomAdapter(LogAdapter):
+            def to_json(self, data):
+                return json.dumps(data, default=datetime_handler)
+
+        logger = CustomAdapter(None)
+
+        res = logger._get_log_stmt(
+            logging.DEBUG, '$created', created = datetime.datetime.now()
+        )
+        res = json.loads(res)
+        self.assertNotEquals(res[logger.LEVEL], 'ERROR')
         
     def test_core_fields(self):
         logger = LogAdapter(None)

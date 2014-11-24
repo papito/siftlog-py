@@ -51,10 +51,8 @@ class LogAdapter(logging.LoggerAdapter):
                     del kwargs[omit_key]
             del kwargs[self.WITHOUT]
             
-        payload = ''
-
         try:
-            payload = json.dumps(kwargs)
+            payload = self.to_json(kwargs)
         except Exception, ex:
             msg = 'LOGGER EXCEPTION "{0}" in  {1}'.format(str(ex), loc)
             return json.dumps({
@@ -63,6 +61,9 @@ class LogAdapter(logging.LoggerAdapter):
             })
 
         return payload
+
+    def to_json(self, data):
+        return json.dumps(data)
 
     def debug(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.DEBUG):
