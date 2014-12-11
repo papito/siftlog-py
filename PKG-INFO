@@ -1,8 +1,8 @@
 Metadata-Version: 1.1
-Name: jaylog
+Name: siftlog
 Version: 0.1
 Summary: JSON logger
-Home-page: https://github.com/papito/jaylog
+Home-page: https://github.com/papito/siftlog
 Author: Andrei Taranchenko
 Author-email: a.taranchenko@yahoo.com
 License: Affero General Public License
@@ -20,14 +20,14 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-Description: jaylog
+Description: siftlog
         ===============
         
         JSON Logger.
         
         ::
         
-            pip install jaylog
+            pip install siftlog
         
 Keywords: logger log json color
 Platform: UNIX

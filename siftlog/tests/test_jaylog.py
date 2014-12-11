@@ -3,16 +3,16 @@ import json
 import logging
 import datetime
 from string import Template
-from jaylog import LogAdapter
+from siftlog import SiftLog
 
 class TestLogger(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.logger = LogAdapter(None)
+        cls.logger = SiftLog(None)
 
     def test_arbitrary_constants(self):
-        logger = LogAdapter(None, pid=12345, app='APP NAME')
+        logger = SiftLog(None, pid=12345, app='APP NAME')
         res = json.loads(logger._get_log_stmt(logging.INFO, None))
         
         self.assertEquals(res['pid'], 12345)
@@ -43,7 +43,7 @@ class TestLogger(unittest.TestCase):
             or isinstance(obj, datetime.date) 
             else None)
             
-        class CustomAdapter(LogAdapter):
+        class CustomAdapter(SiftLog):
             def to_json(self, data):
                 return json.dumps(data, default=datetime_handler)
 
@@ -56,7 +56,7 @@ class TestLogger(unittest.TestCase):
         self.assertNotEquals(res[logger.LEVEL], 'ERROR')
         
     def test_core_fields(self):
-        logger = LogAdapter(None)
+        logger = SiftLog(None)
         logger.MESSAGE = 'm'
         logger.LEVEL = 'l'
         logger.WITHOUT = 'w'

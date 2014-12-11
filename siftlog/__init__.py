@@ -5,7 +5,7 @@ import inspect
 import time
 from string import Template
 
-class LogAdapter(logging.LoggerAdapter):
+class SiftLog(logging.LoggerAdapter):
     MESSAGE     = 'msg'
     LEVEL       = 'level'
     LOCATION    = 'loc'
@@ -16,7 +16,7 @@ class LogAdapter(logging.LoggerAdapter):
     TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
     def __init__(self, logger, **kwargs):
-        super(LogAdapter, self).__init__(logger, {})
+        super(SiftLog, self).__init__(logger, {})
         self.constants = kwargs
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
