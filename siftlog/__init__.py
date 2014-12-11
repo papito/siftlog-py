@@ -5,6 +5,9 @@ import inspect
 import time
 from string import Template
 
+logging.TRACE = 5
+logging.addLevelName(logging.TRACE, 'TRACE')
+
 class SiftLog(logging.LoggerAdapter):
     MESSAGE     = 'msg'
     LEVEL       = 'level'
@@ -54,7 +57,7 @@ class SiftLog(logging.LoggerAdapter):
             
         try:
             payload = self.to_json(kwargs)
-        except Exception, ex:
+        except (Exception) as ex:
             msg = 'LOGGER EXCEPTION "{0}" in  {1}'.format(str(ex), loc)
             return json.dumps({
                 'msg': msg,
@@ -68,6 +71,12 @@ class SiftLog(logging.LoggerAdapter):
 
     def get_timestamp(self):
         return time.strftime(self.TIME_FORMAT)
+
+    def trace(self, msg, *args, **kwargs):
+        if not self.logger.isEnabledFor(logging.TRACE):
+            return 
+
+        self.log(logging.TRACE, msg,  *args, **kwargs)
 
     def debug(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.DEBUG):
