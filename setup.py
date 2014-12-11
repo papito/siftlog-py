@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='jaylog',
+setup(name='siftlog',
       version='0.1',
       description='JSON logs',
       url='http://github.com/papito/siftlog-py',
