@@ -14,7 +14,6 @@ class SiftLog(logging.LoggerAdapter):
     LOCATION    = 'loc'
     TAGS        = 'tags'
     TIME        = 'time'
-    WITHOUT     = 'without'
     TAG_PREFIX  = 'tag.'
     TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
@@ -47,14 +46,6 @@ class SiftLog(logging.LoggerAdapter):
         if tags and self.TAG_PREFIX:
             kwargs[self.TAGS] = [self.TAG_PREFIX + tag for tag in tags]
 
-        # delete keys we don't want
-        if self.WITHOUT in kwargs:
-            omit_keys = kwargs.get(self.WITHOUT, [])
-            for omit_key in omit_keys:
-                if omit_key in kwargs:
-                    del kwargs[omit_key]
-            del kwargs[self.WITHOUT]
-            
         try:
             payload = self.to_json(kwargs)
         except (Exception) as ex:

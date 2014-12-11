@@ -59,10 +59,7 @@ class TestLogger(unittest.TestCase):
         logger = SiftLog(None)
         logger.MESSAGE = 'm'
         logger.LEVEL = 'l'
-        logger.WITHOUT = 'w'
-        res = logger._get_log_stmt(logging.DEBUG, '', w=[logger.LOCATION])
+        res = logger._get_log_stmt(logging.DEBUG, '')
         res = json.loads(res)
         self.assertTrue(logger.MESSAGE in res)
         self.assertTrue(logger.LEVEL in res)
-        self.assertFalse(logger.LOCATION in res)
-        self.assertFalse(logger.WITHOUT in res)
