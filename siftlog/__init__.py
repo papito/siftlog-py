@@ -44,7 +44,7 @@ class SiftLog(logging.LoggerAdapter):
 
         kwargs[self.TIME] = self.get_timestamp()
 
-        if tags:
+        if tags and self.TAG_PREFIX:
             kwargs[self.TAGS] = [self.TAG_PREFIX + tag for tag in tags]
 
         # delete keys we don't want
