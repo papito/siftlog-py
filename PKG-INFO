@@ -2,11 +2,11 @@ Metadata-Version: 1.1
 Name: siftlog
 Version: 0.1
 Summary: JSON logger
-Home-page: https://github.com/papito/siftlog
+Home-page: https://github.com/papito/siftlog-py
 Author: Andrei Taranchenko
-Author-email: a.taranchenko@yahoo.com
+Author-email: drey10@gmail.com
 License: Affero General Public License
-Copyright (C) 2014 Andrei Taranchenko [http://andrei.nyc]
+Copyright (C) 2015 Andrei Taranchenko [http://andrei.nyc]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
