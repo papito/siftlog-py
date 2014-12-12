@@ -35,3 +35,13 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
+## TODO
+#### Custom time format
+
+#### Custom core key names
+
+#### Tag prefix
+
+#### Custom JSON serialization
+
+
