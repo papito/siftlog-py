@@ -12,8 +12,11 @@ Sift Log - JSON logging adapter for Python
 #### A simple log message
 ```python
 >>> log.info('Hello')
-{"msg": "Hello", "time": "12-12-14 10:12:01 EST", "level": "INFO"}
+{"msg": "Hello", "time": "12-12-14 10:12:01 EST", "level": "INFO"}`
 ```
+#### Logging with tags
+>>> log.debug('Tags!', 'MONGO', 'DB')
+{"msg": "Tags!", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.DB"], "level": "DEBUG"}
 
 ## Setup
 #### Logging to console
