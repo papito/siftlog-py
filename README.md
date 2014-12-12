@@ -49,6 +49,18 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
+#### Constants
+You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
+
+```python
+import os
+from siftlog import SyftLog
+log = SiftLog(logger, pid = os.getpid(), env='INTEGRATION')
+```
+`{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
+
+
+
 #### Custom time format
 Define `SiftLog.TIME_FORMAT`, accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
 
@@ -58,18 +70,17 @@ Key names, such as `msg` and `level` can be overridden, if they clash with commo
 The following can be redefined:
 
  * __SiftLog.MESSAGE__ (default `msg`)
- * __SiftLog.LEVEL__ (default `msg`)
+ * __SiftLog.LEVEL__ (default `level`)
  * __SiftLog.LOCATION__ (default `loc`)
  * __SiftLog.TAGS__ (default `tags`)
  * __SiftLog.TIME__ (default `time`)
 
-## DOCS TODO
-
-
 #### Tag prefix
+Arbitrary tags by default are prefixed with `tag.`, for easier searching. The prefix can be changed, or removed, by redefining `SiftLog.TAG_PREFIX`
+
+## DOCS TODO
 
 #### Custom JSON serialization
 
-#### Constants
 
 
