@@ -23,13 +23,13 @@ log.debug('Tags!', 'MONGO', 'DB')
 
 #### Adding JSON keys
 ```python
-log.debug('Some key', is_admin = True, username='papito')
+log.debug('Some key', is_admin = True, username = 'papito')
 ```
 `{"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG"}`
 
 #### String substitution
 ```python
-log.debug('User "$username" admin? $is_admin', is_admin = False, username='fez')
+log.debug('User "$username" admin? $is_admin', is_admin = False, username = 'fez')
 ```
 `{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "time": "12-12-14 10:12:18 EST", "level": "DEBUG"}`
 
