@@ -8,7 +8,9 @@ Sift Log - JSON logging adapter for Python
 * Has the `TRACE` log level built-in
 * Meant to be used with core Python logging (formatters, handlers, etc)
  
-## Logging to console
+## Setup
+
+#### Logging to console
 ```python
 import sys
 import logging
