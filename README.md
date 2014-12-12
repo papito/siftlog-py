@@ -4,7 +4,7 @@ Sift Log - JSON logging adapter for Python
 ## Features
 * Tag log statements with arbitrary values for easier grouping and analysis
 * Add arbitrary keyword arguments that are converted to JSON values
-* Variable sabstitution in log messages
+* Variable substitution in log messages
 * `TRACE` log level built-in
 * Meant to be used with core Python logging (formatters, handlers, etc)
  
