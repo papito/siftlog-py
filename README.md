@@ -49,7 +49,7 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
-In this fashion, you can direct the JSON logs to [any core logging handler](!https://docs.python.org/2/library/logging.handlers.html)
+In this fashion, you can direct the JSON logs to [any core logging handler](https://docs.python.org/2/library/logging.handlers.html)
 
 #### Constants (re-occuring values)
 You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
