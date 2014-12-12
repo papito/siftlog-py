@@ -25,7 +25,7 @@ Sift Log - JSON logging adapter for Python
 ```python
 >>> log.debug('Some key', is_admin = True, username='papito')
 ```
-    {"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG"}
+`{"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG"}`
 
 #### String substitution
 ```python
