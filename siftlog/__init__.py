@@ -87,9 +87,6 @@ class SiftLog(logging.LoggerAdapter):
 
         self.log(logging.WARNING, msg,  *args, **kwargs)
 
-    def warn(self, msg, *args, **kwargs):
-        self.warning(msg, *args, **kwargs)
-
     def error(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.ERROR):
             return 
