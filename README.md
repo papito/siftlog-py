@@ -49,8 +49,10 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
-## DOCS TODO
 #### Custom time format
+Define `SiftLog.TIME_FORMAT`, accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
+
+## DOCS TODO
 
 #### Custom core key names
 
