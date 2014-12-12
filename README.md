@@ -14,10 +14,23 @@ Sift Log - JSON logging adapter for Python
 >>> log.info('Hello')
 {"msg": "Hello", "time": "12-12-14 10:12:01 EST", "level": "INFO"}`
 ```
+
 #### Logging with tags
 ```python
 >>> log.debug('Tags!', 'MONGO', 'DB')
 {"msg": "Tags!", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.DB"], "level": "DEBUG"}
+```
+
+#### Adding JSON keys
+```python
+>>> log.debug('Some key', is_admin = True, username='papito')
+{"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG"}
+```
+
+#### String substitution
+```python
+>>> log.debug('User "$username" admin? $is_admin', is_admin = False, username='fez')
+{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "time": "12-12-14 10:12:18 EST", "level": "DEBUG"}
 ```
 
 ## Setup
@@ -43,5 +56,7 @@ log = SiftLog(logger)
 #### Tag prefix
 
 #### Custom JSON serialization
+
+#### Constants
 
 
