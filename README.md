@@ -49,7 +49,7 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
-#### Constants
+#### Constants (re-occuring values)
 You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
 
 ```python
