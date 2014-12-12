@@ -19,7 +19,7 @@ log.info('Hello')
 ```python
 log.debug('Creating new user', 'MONGO', 'STORAGE')
 ```
-`{"msg": "Tags!", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.DB", "tag.STORE"], "level": "DEBUG"}`
+`{"msg": "Creating new use", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.STORAGE"], "level": "DEBUG"}`
 
 #### Adding JSON keys
 ```python
