@@ -17,7 +17,7 @@ log.info('Hello')
 
 #### Logging with tags
 ```python
-log.debug('Tags!', 'MONGO', 'DB', 'STORE')
+log.debug('Creating new user', 'MONGO', 'STORAGE')
 ```
 `{"msg": "Tags!", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.DB", "tag.STORE"], "level": "DEBUG"}`
 
