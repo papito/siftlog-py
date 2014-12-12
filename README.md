@@ -80,9 +80,3 @@ The following can be redefined:
 #### Tag prefix
 Arbitrary tags by default are prefixed with `tag.`, for easier searching. The prefix can be changed, or removed, by redefining `SiftLog.TAG_PREFIX`
 
-```python
-SiftLog.to_json = def to_json(self, data): = 
-```
-
-
-
