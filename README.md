@@ -42,12 +42,14 @@ import logging
 from siftlog import SiftLog
 
 logger = logging.getLogger()
-logger.setLevel(logging.TRACE)
+logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
 log = SiftLog(logger)
 ```
+
+In this fashion, you can direct the JSON logs to [any core logging handler](!https://docs.python.org/2/library/logging.handlers.html)
 
 #### Constants (re-occuring values)
 You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
@@ -78,9 +80,9 @@ The following can be redefined:
 #### Tag prefix
 Arbitrary tags by default are prefixed with `tag.`, for easier searching. The prefix can be changed, or removed, by redefining `SiftLog.TAG_PREFIX`
 
-## DOCS TODO
-
-#### Custom JSON serialization
+```python
+SiftLog.to_json = def to_json(self, data): = 
+```
 
 
 
