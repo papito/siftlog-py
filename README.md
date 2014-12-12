@@ -52,9 +52,19 @@ log = SiftLog(logger)
 #### Custom time format
 Define `SiftLog.TIME_FORMAT`, accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
 
+#### Custom core key names
+Key names, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.
+
+The following can be redefined:
+
+ * __SiftLog.MESSAGE__ (default `msg`)
+ * __SiftLog.LEVEL__ (default `msg`)
+ * __SiftLog.LOCATION__ (default `loc`)
+ * __SiftLog.TAGS__ (default `tags`)
+ * __SiftLog.TIME__ (default `time`)
+
 ## DOCS TODO
 
-#### Custom core key names
 
 #### Tag prefix
 
