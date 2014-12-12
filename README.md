@@ -35,7 +35,7 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
-## TODO
+## DOCS TODO
 #### Custom time format
 
 #### Custom core key names
