@@ -7,7 +7,7 @@ def read(*paths):
         return f.read()
 
 setup(name='siftlog',
-      version='0.13',
+      version='0.10',
       description='Structured JSON logging',
       long_description=(read('README.rst')),
       url='http://github.com/papito/siftlog-py',
