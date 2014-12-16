@@ -3,6 +3,7 @@ import logging
 import json
 import inspect
 import time
+import itertools
 from string import Template
 
 logging.TRACE = 5
@@ -14,7 +15,6 @@ class SiftLog(logging.LoggerAdapter):
     LOCATION    = 'loc'
     TAGS        = 'tags'
     TIME        = 'time'
-    TAG_PREFIX  = 'tag.'
     TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
     def __init__(self, logger, **kwargs):
@@ -32,19 +32,15 @@ class SiftLog(logging.LoggerAdapter):
         # add message to the payload, substitute with the passed data
         kwargs[self.MESSAGE] = Template(msg).safe_substitute(kwargs)
 
-        # caller info
-        frm = inspect.stack()[3]
-        mod = inspect.getmodule(frm[0])
-        if mod:
-            line_no = frm[2]
-            method  = frm[3]
-            module  = mod.__name__
-            loc = kwargs[self.LOCATION] = '%s:%s:%s' % (module, method, line_no)
+        # caller location
+        loc = self.get_caller_info()
+        if loc:
+            kwargs[self.LOCATION] = loc
 
         kwargs[self.TIME] = self.get_timestamp()
 
-        if tags and self.TAG_PREFIX:
-            kwargs[self.TAGS] = [self.TAG_PREFIX + tag for tag in tags]
+        if tags:
+            kwargs[self.TAGS] = tags
 
         try:
             payload = self.to_json(kwargs)
@@ -62,6 +58,45 @@ class SiftLog(logging.LoggerAdapter):
 
     def get_timestamp(self):
         return time.strftime(self.TIME_FORMAT)
+
+    def get_caller_info(self):
+        loc = self._get_caller_info()
+
+        if not loc:
+            return None
+
+        module, method, line_no = loc
+        return '%s:%s:%s' % (module, method, line_no)
+
+    def _get_caller_info(self):
+        # pull the frames from the current stack, reversed,
+        # since it's easier to find the first siftlog frame
+        frames = [
+            (idx, frm, inspect.getmodule(frm[0])) 
+            for idx, frm 
+            in enumerate(reversed(inspect.stack()))
+        ]
+
+        # travel the stack from behind, looking for the first siftlog frame
+        res = itertools.dropwhile(lambda (idx, f, m): m and m.__name__ != 'siftlog' , frames)
+        # the first siftlog frame from back of the stack
+        siftlog_frame = res.next()
+        # its index
+        siftlog_frame_idx = siftlog_frame[0]
+
+        if siftlog_frame_idx == 0: # there is no caller module (console)
+            return None
+
+        # the frame before this one is what's calling the logger
+        frm = frames[siftlog_frame_idx - 1][1]
+
+        # now get the caller info
+        mod = inspect.getmodule(frm[0])
+        line_no = frm[2]
+        method  = frm[3]
+        module  = mod.__name__
+
+        return module, method, line_no
 
     def trace(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.TRACE):
@@ -86,6 +121,9 @@ class SiftLog(logging.LoggerAdapter):
             return 
 
         self.log(logging.WARNING, msg,  *args, **kwargs)
+
+    def warn(self, msg, *args, **kwargs):
+        self.warning(msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.ERROR):

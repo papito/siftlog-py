@@ -6,10 +6,11 @@ Features
 
 -  Tag log statements with arbitrary values for easier grouping and
    analysis
--  Add arbitrary keyword arguments that are converted to JSON values
--  Variable substitution in log messages
--  ``TRACE`` log level built-in
+-  Add keyword arguments that are converted to JSON values
+-  Variable substitution
+-  Specifies where log calls are made from
 -  Meant to be used with core Python logging (formatters, handlers, etc)
+-  ``TRACE`` log level built-in
 
 Examples
 --------
@@ -30,14 +31,14 @@ Logging with tags
 
     log.debug('Creating new user', 'MONGO', 'STORAGE')
 
-``{"msg": "Creating new user", "time": "12-12-14 10:12:09 EST", "tags": ["tag.MONGO", "tag.STORAGE"], "level": "DEBUG", "loc": "test:log_test:20"}``
+``{"msg": "Creating new user", "time": "12-12-14 10:12:09 EST", "tags": ["MONGO", "STORAGE"], "level": "DEBUG", "loc": "test:log_test:20"}``
 
 Adding JSON keys
 ^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    log.debug('Some key', is_admin = True, username = 'papito')
+    log.debug('Some key', is_admin=True, username='papito')
 
 ``{"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG", "loc": "test:log_test:20"}``
 
@@ -46,7 +47,7 @@ String substitution
 
 .. code:: python
 
-    log.debug('User "$username" admin? $is_admin', is_admin = False, username = 'fez')
+    log.debug('User "$username" admin? $is_admin', is_admin=False, username='fez')
 
 ``{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "time": "12-12-14 10:12:18 EST", "level": "DEBUG", "loc": "test:log_test:20"}``
 
@@ -69,7 +70,7 @@ Logging to console
 
     log = SiftLog(logger)
 
-In this fashion, you can direct the JSON logs to `any core logging
+In this fashion, you can direct the JSON logs to `any logging
 handler <https://docs.python.org/2/library/logging.handlers.html>`__
 
 Constants (re-occuring values)
@@ -84,7 +85,7 @@ adapter initialization:
 
     import os
     from siftlog import SyftLog
-    log = SiftLog(logger, pid = os.getpid(), env='INTEGRATION')
+    log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 
 ``{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}``
 
@@ -97,7 +98,7 @@ Define ``SiftLog.TIME_FORMAT``, accepted by
 Custom core key names
 ^^^^^^^^^^^^^^^^^^^^^
 
-Key names, such as ``msg`` and ``level`` can be overridden, if they
+Core keys, such as ``msg`` and ``level`` can be overridden, if they
 clash with common keys you might be using.
 
 The following can be redefined:
@@ -108,9 +109,3 @@ The following can be redefined:
 -  **SiftLog.TAGS** (default ``tags``)
 -  **SiftLog.TIME** (default ``time``)
 
-Tag prefix
-^^^^^^^^^^
-
-Arbitrary tags by default are prefixed with ``tag.``, for easier
-searching. The prefix can be changed, or removed, by redefining
-``SiftLog.TAG_PREFIX``
