@@ -64,7 +64,11 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 
 
 #### Custom time format
-Define `SiftLog.TIME_FORMAT`, accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
+```python
+log = SiftLog(logger)
+log.TIME_FORMAT = [YOUR FORMAT]
+```
+Define the format as accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
 
 #### Custom core key names
 Core keys, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.
