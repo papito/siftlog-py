@@ -84,7 +84,7 @@ adapter initialization:
 .. code:: python
 
     import os
-    from siftlog import SyftLog
+    from siftlog import SiftLog
     log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 
 ``{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}``
@@ -92,8 +92,28 @@ adapter initialization:
 Custom time format
 ^^^^^^^^^^^^^^^^^^
 
-Define ``SiftLog.TIME_FORMAT``, accepted by
+.. code:: python
+
+    log = SiftLog(logger)
+    log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+
+Define the format as accepted by
 `time.strftime() <https://docs.python.org/2/library/time.html#time.strftime>`__
+
+Custom location format
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    log = SiftLog(logger)
+    log.LOCATION_FORMAT = '$module:$method:$line_no'
+
+The format should be a string containing any of the following variables:
+
+-  **$file**
+-  **$line\_no**
+-  **$method**
+-  **$module**
 
 Custom core key names
 ^^^^^^^^^^^^^^^^^^^^^
@@ -103,9 +123,10 @@ clash with common keys you might be using.
 
 The following can be redefined:
 
--  **SiftLog.MESSAGE** (default ``msg``)
--  **SiftLog.LEVEL** (default ``level``)
--  **SiftLog.LOCATION** (default ``loc``)
--  **SiftLog.TAGS** (default ``tags``)
--  **SiftLog.TIME** (default ``time``)
+-  **MESSAGE** (default ``msg``)
+-  **LEVEL** (default ``level``)
+-  **LOCATION** (default ``loc``)
+-  **TAGS** (default ``tags``)
+-  **TIME** (default ``time``)
 
+As in: ``python log = SiftLog(logger) log.MESSAGE = 'MESSAGE'``
