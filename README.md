@@ -57,7 +57,7 @@ You can define constants that will appear in every single log message. This is u
 
 ```python
 import os
-from siftlog import SyftLog
+from siftlog import SiftLog
 log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 ```
 `{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
