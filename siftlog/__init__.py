@@ -10,16 +10,17 @@ logging.TRACE = 5
 logging.addLevelName(logging.TRACE, 'TRACE')
 
 class SiftLog(logging.LoggerAdapter):
-    MESSAGE     = 'msg'
-    LEVEL       = 'level'
-    LOCATION    = 'loc'
-    TAGS        = 'tags'
-    TIME        = 'time'
-    TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
     def __init__(self, logger, **kwargs):
         super(SiftLog, self).__init__(logger, {})
-        self.constants = kwargs
+        self.MESSAGE     = 'msg'
+        self.LEVEL       = 'level'
+        self.LOCATION    = 'loc'
+        self.TAGS        = 'tags'
+        self.TIME        = 'time'
+        self.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+
+        self.constants   = kwargs
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
         msg = msg or ''

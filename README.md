@@ -71,8 +71,14 @@ Core keys, such as `msg` and `level` can be overridden, if they clash with commo
 
 The following can be redefined:
 
- * __SiftLog.MESSAGE__ (default `msg`)
- * __SiftLog.LEVEL__ (default `level`)
- * __SiftLog.LOCATION__ (default `loc`)
- * __SiftLog.TAGS__ (default `tags`)
- * __SiftLog.TIME__ (default `time`)
+ * __MESSAGE__ (default `msg`)
+ * __LEVEL__ (default `level`)
+ * __LOCATION__ (default `loc`)
+ * __TAGS__ (default `tags`)
+ * __TIME__ (default `time`)
+
+As in:
+```python
+log = SiftLog(logger)
+log.MESSAGE = 'MESSAGE'
+```
