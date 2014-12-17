@@ -66,9 +66,21 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 #### Custom time format
 ```python
 log = SiftLog(logger)
-log.TIME_FORMAT = [YOUR FORMAT]
+log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 ```
 Define the format as accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
+
+#### Custom location format
+```python
+log = SiftLog(logger)
+log.LOCATION_FORMAT = '$module:$method:$line_no'
+```
+The format should be a string containing any of the following variables:
+
+ * __$file__
+ * __$line_no__
+ * __$method__
+ * __$module__
 
 #### Custom core key names
 Core keys, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.

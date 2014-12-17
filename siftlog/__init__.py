@@ -19,8 +19,9 @@ class SiftLog(logging.LoggerAdapter):
         self.TAGS        = 'tags'
         self.TIME        = 'time'
         self.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+        self.LOCATION_FORMAT = '$module:$method:$line_no'
 
-        self.constants   = kwargs
+        self._constants   = kwargs
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
         msg = msg or ''
@@ -28,7 +29,7 @@ class SiftLog(logging.LoggerAdapter):
         kwargs[self.LEVEL] = logging.getLevelName(level)
 
         # append the optional constants defined on initialization
-        kwargs.update(self.constants)
+        kwargs.update(self._constants)
 
         # add message to the payload, substitute with the passed data
         kwargs[self.MESSAGE] = Template(msg).safe_substitute(kwargs)
@@ -61,13 +62,12 @@ class SiftLog(logging.LoggerAdapter):
         return time.strftime(self.TIME_FORMAT)
 
     def get_caller_info(self):
-        loc = self._get_caller_info()
+        caller = self._get_caller_info()
 
-        if not loc:
+        if not caller:
             return None
 
-        module, method, line_no = loc
-        return '%s:%s:%s' % (module, method, line_no)
+        return Template(self.LOCATION_FORMAT).safe_substitute(caller)
 
     def _get_caller_info(self):
         # pull the frames from the current stack, reversed,
@@ -93,11 +93,13 @@ class SiftLog(logging.LoggerAdapter):
 
         # now get the caller info
         mod = inspect.getmodule(frm[0])
-        line_no = frm[2]
-        method  = frm[3]
-        module  = mod.__name__
-
-        return module, method, line_no
+        
+        return {
+            'file': frm[1],
+            'line_no' : frm[2],
+            'method'  : frm[3],
+            'module'  : mod.__name__,
+        }
 
     def trace(self, msg, *args, **kwargs):
         if not self.logger.isEnabledFor(logging.TRACE):
