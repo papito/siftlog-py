@@ -10,17 +10,16 @@ logging.TRACE = 5
 logging.addLevelName(logging.TRACE, 'TRACE')
 
 class SiftLog(logging.LoggerAdapter):
+    MESSAGE     = 'msg'
+    LEVEL       = 'level'
+    LOCATION    = 'loc'
+    TAGS        = 'tags'
+    TIME        = 'time'
+    TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+    LOCATION_FORMAT = '$module:$method:$line_no'
 
     def __init__(self, logger, **kwargs):
         super(SiftLog, self).__init__(logger, {})
-        self.MESSAGE     = 'msg'
-        self.LEVEL       = 'level'
-        self.LOCATION    = 'loc'
-        self.TAGS        = 'tags'
-        self.TIME        = 'time'
-        self.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
-        self.LOCATION_FORMAT = '$module:$method:$line_no'
-
         self._constants   = kwargs
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
@@ -143,3 +142,105 @@ class SiftLog(logging.LoggerAdapter):
     def log(self, level, msg, *args, **kwargs):
         payload = self._get_log_stmt(level, msg, *args, **kwargs)
         self.logger.log(level, payload)
+
+class ColorStreamHandler(logging.StreamHandler):
+    """
+        This is  modeled after https://gist.github.com/vsajip/758430
+    """
+
+    # color names to indices
+    COLOR_MAP = {
+        'black': 0,
+        'red': 1,
+        'green': 2,
+        'yellow': 3,
+        'blue': 4,
+        'magenta': 5,
+        'cyan': 6,
+        'white': 7,
+    }
+ 
+    # levels to (background, foreground, bold/intense)
+    LEVEL_MAP = {
+        logging.DEBUG: (None, 'blue', False),
+        logging.INFO: (None, 'green', False),
+        logging.WARNING: (None, 'yellow', False),
+        logging.ERROR: (None, 'red', True),
+        logging.CRITICAL: ('red', 'white', True),
+    }
+    csi = '\x1b['
+    reset = '\x1b[0m'
+ 
+    @property
+    def is_tty(self):
+        isatty = getattr(self.stream, 'isatty', None)
+        return isatty and isatty()
+ 
+    def emit(self, record):
+        try:
+            message = self.format(record)
+            stream = self.stream
+            if os.name != 'posix' or not self.is_tty:
+                stream.write(message)
+            else:
+                self.output_colorized(message)
+            stream.write(getattr(self, 'terminator', '\n'))
+            self.flush()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            self.handleError(record)
+ 
+    def output_colorized(self, message):
+        self.stream.write(message)
+ 
+    def colorize(self, message, record):
+        json_rec = json.loads(message)
+        
+        if record.levelno in self.LEVEL_MAP:
+            bg, fg, bold = self.LEVEL_MAP[record.levelno]
+            params = []
+            if bg in self.COLOR_MAP:
+                params.append(str(self.COLOR_MAP[bg] + 40))
+            if fg in self.COLOR_MAP:
+                params.append(str(self.COLOR_MAP[fg] + 30))
+            if bold:
+                params.append('1')
+            if params:
+                if SiftLog.LEVEL in json_rec:
+                    level = '"{0}": "{1}"'.format(SiftLog.LEVEL, json_rec[SiftLog.LEVEL])
+                    color_level = ''.join((self.csi, ';'.join(params), 'm', level, self.reset))
+                    message = message.replace(level, color_level)
+
+                if SiftLog.MESSAGE in json_rec:
+                    msg = '"{0}": "{1}"'.format(SiftLog.MESSAGE, json_rec[SiftLog.MESSAGE])
+                    color_msg = ''.join((self.csi, ';'.join(params), 'm', msg, self.reset))
+                    message = message.replace(msg, color_msg)
+
+        for key in json_rec.keys():
+            if key in [SiftLog.MESSAGE, SiftLog.LEVEL]: continue
+            # bold the JSON keys
+            bg, fg, bold = None, None, True
+            params = []
+            if bg in self.COLOR_MAP:
+                params.append(str(self.COLOR_MAP[bg] + 40))
+            if fg in self.COLOR_MAP:
+                params.append(str(self.COLOR_MAP[fg] + 30))
+            if bold:
+                params.append('1')
+
+            val = '"%s":' % key
+            color_val = '"' + ''.join((self.csi, ';'.join(params), 'm', key, self.reset)) + '":'
+            message = message.replace(val, color_val)
+
+        return message
+ 
+    def format(self, record):
+        message = logging.StreamHandler.format(self, record)
+        if self.is_tty:
+            message = message.strip()
+            lines = len(message.split('\n'))
+            if lines == 1:
+                message = self.colorize(message, record)
+        return message
+

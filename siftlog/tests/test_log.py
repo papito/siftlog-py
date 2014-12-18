@@ -22,20 +22,20 @@ class TestLogger(unittest.TestCase):
         stmt = 'simple log statement'
         res = json.loads(self.logger._get_log_stmt(logging.DEBUG, stmt))
 
-        self.assertEquals(res['msg'], stmt)
+        self.assertEquals(res[self.logger.MESSAGE], stmt)
     
     def test_with_string_formatting(self):
         stmt = 'simple log statement with variable $var'
         data = {'var': 1}
         res = json.loads(self.logger._get_log_stmt(logging.DEBUG, stmt, **data))
 
-        self.assertEquals(res['msg'], Template(stmt).substitute(data))
+        self.assertEquals(res[self.logger.MESSAGE], Template(stmt).substitute(data))
         
     def test_tags(self):
         res = self.logger._get_log_stmt(logging.DEBUG, '', 'TAG1', 'TAG2')
         res = json.loads(res)
 
-        self.assertEquals(len(res['tags']), 2)
+        self.assertEquals(len(res[self.logger.TAGS]), 2)
         
     def test_custom_adapter(self):
         datetime_handler = lambda obj: (obj.isoformat() 
