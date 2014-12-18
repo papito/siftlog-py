@@ -172,6 +172,7 @@ class ColorStreamHandler(logging.StreamHandler):
  
     # levels to (background, foreground, bold/intense)
     _LEVEL_MAP = {
+        logging.TRACE: (None, None, False),
         logging.DEBUG: (None, BLUE, False),
         logging.INFO: (None, GREEN, False),
         logging.WARNING: (None, YELLOW, False),
@@ -182,12 +183,15 @@ class ColorStreamHandler(logging.StreamHandler):
     @staticmethod
     def set_color(level=None, bg=None, fg=None, bold=False):
         assert level
+        
+        if level not in ColorStreamHandler._LEVEL_MAP:
+            raise RuntimeError('Logging level "{}" is invalid'.format(level))
 
         if bg and bg not in ColorStreamHandler._COLOR_MAP:
-            raise RuntimeError('Background color {} is invalid'.format(bg))
+            raise RuntimeError('Background color "{}" is invalid'.format(bg))
 
         if fg and fg not in ColorStreamHandler._COLOR_MAP:
-            raise RuntimeError('Foreground color {} is invalid'.format(fg))
+            raise RuntimeError('Foreground color "{}" is invalid'.format(fg))
 
         if not isinstance(bold, bool):
             raise RuntimeError('Bold flag must be a True/False')

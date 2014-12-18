@@ -43,14 +43,16 @@ class TestColor(unittest.TestCase):
 
         with self.assertRaises(RuntimeError) as cm:
             handler.set_color(
+                'blah', bg=handler.GREEN, fg=handler.WHITE, bold=True
+            )
+        with self.assertRaises(RuntimeError) as cm:
+            handler.set_color(
                 logging.INFO, bg='bad', fg=handler.WHITE, bold=True
             )
-
         with self.assertRaises(RuntimeError) as cm:
             handler.set_color(
                 logging.INFO, bg=handler.BLACK, fg='bad', bold=True
             )
-
         with self.assertRaises(RuntimeError) as cm:
             handler.set_color(
                 logging.INFO, bg=handler.BLACK, fg=handler.WHITE, bold='bad'
