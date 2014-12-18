@@ -153,10 +153,10 @@ Custom location format
 
 The format should be a string containing any of the following variables:
 
--  $file
--  $line\_no
--  $method
--  $module
+-  ``$file``
+-  ``$line_no``
+-  ``$method``
+-  ``$module``
 
 Custom core key names
 ^^^^^^^^^^^^^^^^^^^^^

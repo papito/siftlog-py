@@ -112,10 +112,10 @@ SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
 ```
 The format should be a string containing any of the following variables:
 
- * $file
- * $line_no
- * $method
- * $module
+ * `$file`
+ * `$line_no`
+ * `$method`
+ * `$module`
 
 #### Custom core key names
 Core keys, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.
