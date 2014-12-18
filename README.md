@@ -1,4 +1,4 @@
-Sift Log - JSON logging adapter for Python
+Sift Log - JSON logging adapter for Python (now in color)
 ===============
 
 ## Features
@@ -7,6 +7,7 @@ Sift Log - JSON logging adapter for Python
 * Variable substitution
 * Specifies where log calls are made from
 * Meant to be used with core Python logging (formatters, handlers, etc)
+* Colorized logs on a console (experimental)
 * `TRACE` log level built-in
  
 ## Examples
@@ -111,21 +112,21 @@ SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
 ```
 The format should be a string containing any of the following variables:
 
- * __$file__
- * __$line_no__
- * __$method__
- * __$module__
+ * $file
+ * $line_no
+ * $method
+ * $module
 
 #### Custom core key names
 Core keys, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.
 
 The following can be redefined:
 
- * __SiftLog.MESSAGE__ (default `msg`)
- * __SiftLog.LEVEL__ (default `level`)
- * __SiftLog.LOCATION__ (default `loc`)
- * __SiftLog.TAGS__ (default `tags`)
- * __SiftLog.TIME__ (default `time`)
+ * SiftLog.MESSAGE (default `msg`)
+ * SiftLog.LEVEL (default `level`)
+ * SiftLog.LOCATION (default `loc`)
+ * SiftLog.TAGS (default `tags`)
+ * SiftLog.TIME (default `time`)
 
 As in:
 ```python
