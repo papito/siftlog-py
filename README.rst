@@ -1,5 +1,5 @@
-Sift Log - JSON logging adapter for Python
-==========================================
+Sift Log - JSON logging adapter for Python (now in color)
+=========================================================
 
 Features
 --------
@@ -10,6 +10,7 @@ Features
 -  Variable substitution
 -  Specifies where log calls are made from
 -  Meant to be used with core Python logging (formatters, handlers, etc)
+-  Colorized logs on a console (experimental)
 -  ``TRACE`` log level built-in
 
 Examples
@@ -70,6 +71,48 @@ Logging to console
 
     log = SiftLog(logger)
 
+Color
+^^^^^
+
+To colorize your JSON logs, attach the ``ColorStreamHandler`` to your
+logger. The output will not have color if the logs are being output to a
+file, or on systems that are not POSIX (will not work on Windows for
+now).
+
+.. code:: python
+
+    from siftlog import SiftLog, ColorStreamHandler
+
+    logger = logging.getLogger()
+    handler = ColorStreamHandler(sys.stdout)
+    logger.addHandler(handler)
+
+Different colors
+''''''''''''''''
+
+You can change font background, text color, and boldness.
+
+.. code:: python
+
+    from siftlog import ColorStreamHandler
+
+    handler = ColorStreamHandler(sys.stdout)
+    handler.set_color(
+        logging.DEBUG, bg=handler.WHITE, fg=handler.BLUE, bold=True
+    )
+
+Supported colors
+''''''''''''''''
+
+-  ColorStreamHandler.BLACK
+-  ColorStreamHandler.RED
+-  ColorStreamHandler.GREEN
+-  ColorStreamHandler.YELLOW
+-  ColorStreamHandler.BLUE
+-  ColorStreamHandler.MAGENTA
+-  ColorStreamHandler.CYAN
+-  ColorStreamHandler.WHITE
+
 In this fashion, you can direct the JSON logs to `any logging
 handler <https://docs.python.org/2/library/logging.handlers.html>`__
 
@@ -95,7 +138,7 @@ Custom time format
 .. code:: python
 
     log = SiftLog(logger)
-    log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+    SiftLog.log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
 Define the format as accepted by
 `time.strftime() <https://docs.python.org/2/library/time.html#time.strftime>`__
@@ -106,14 +149,14 @@ Custom location format
 .. code:: python
 
     log = SiftLog(logger)
-    log.LOCATION_FORMAT = '$module:$method:$line_no'
+    SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
 
 The format should be a string containing any of the following variables:
 
--  **$file**
--  **$line\_no**
--  **$method**
--  **$module**
+-  $file
+-  $line\_no
+-  $method
+-  $module
 
 Custom core key names
 ^^^^^^^^^^^^^^^^^^^^^
@@ -123,10 +166,10 @@ clash with common keys you might be using.
 
 The following can be redefined:
 
--  **MESSAGE** (default ``msg``)
--  **LEVEL** (default ``level``)
--  **LOCATION** (default ``loc``)
--  **TAGS** (default ``tags``)
--  **TIME** (default ``time``)
+-  SiftLog.MESSAGE (default ``msg``)
+-  SiftLog.LEVEL (default ``level``)
+-  SiftLog.LOCATION (default ``loc``)
+-  SiftLog.TAGS (default ``tags``)
+-  SiftLog.TIME (default ``time``)
 
-As in: ``python log = SiftLog(logger) log.MESSAGE = 'MESSAGE'``
+As in: ``python log = SiftLog(logger) SiftLog.log.MESSAGE = 'MESSAGE'``
