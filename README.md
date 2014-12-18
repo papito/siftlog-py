@@ -66,14 +66,14 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 #### Custom time format
 ```python
 log = SiftLog(logger)
-log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+SiftLog.log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 ```
 Define the format as accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
 
 #### Custom location format
 ```python
 log = SiftLog(logger)
-log.LOCATION_FORMAT = '$module:$method:$line_no'
+SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
 ```
 The format should be a string containing any of the following variables:
 
@@ -87,14 +87,14 @@ Core keys, such as `msg` and `level` can be overridden, if they clash with commo
 
 The following can be redefined:
 
- * __MESSAGE__ (default `msg`)
- * __LEVEL__ (default `level`)
- * __LOCATION__ (default `loc`)
- * __TAGS__ (default `tags`)
- * __TIME__ (default `time`)
+ * __SiftLog.MESSAGE__ (default `msg`)
+ * __SiftLog.LEVEL__ (default `level`)
+ * __SiftLog.LOCATION__ (default `loc`)
+ * __SiftLog.TAGS__ (default `tags`)
+ * __SiftLog.TIME__ (default `time`)
 
 As in:
 ```python
 log = SiftLog(logger)
-log.MESSAGE = 'MESSAGE'
+SiftLog.log.MESSAGE = 'MESSAGE'
 ```

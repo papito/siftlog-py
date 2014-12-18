@@ -37,3 +37,43 @@ class TestColor(unittest.TestCase):
         log.warn('warn', 'tag1', 'tag2', key1='key1', key2='key2')
         log.warning('warning', 'tag1', 'tag2', key1='key1', key2='key2')
         log.critical('critical', 'tag1', 'tag2', key1='key1', key2='key2')
+
+    def test_incorrect_usage(self):
+        handler = ColorStreamHandler(sys.stdout)
+
+        with self.assertRaises(RuntimeError) as cm:
+            handler.set_color(
+                logging.INFO, bg='bad', fg=handler.WHITE, bold=True
+            )
+
+        with self.assertRaises(RuntimeError) as cm:
+            handler.set_color(
+                logging.INFO, bg=handler.BLACK, fg='bad', bold=True
+            )
+
+        with self.assertRaises(RuntimeError) as cm:
+            handler.set_color(
+                logging.INFO, bg=handler.BLACK, fg=handler.WHITE, bold='bad'
+            )
+
+    def test_correct_usage(self):
+        handler = ColorStreamHandler(sys.stdout)
+
+        handler.set_color(
+            logging.INFO, bg=handler.GREEN, fg=handler.WHITE, bold=True
+        )
+        handler.set_color(
+            logging.TRACE, bg=handler.CYAN, fg=handler.RED, bold=False
+        )
+        handler.set_color(
+            logging.DEBUG, bg=handler.WHITE, fg=handler.BLUE, bold=True
+        )
+
+        logger = logging.getLogger()
+        logger.setLevel(logging.TRACE)
+        logger.addHandler(handler)
+        log = SiftLog(logger)
+        
+        log.trace('trace', 'tag1', 'tag2', key1='key1', key2='key2')
+        log.debug('debug', 'tag1', 'tag2', key1='key1', key2='key2')
+        log.info('info', 'tag1', 'tag2', key1='key1', key2='key2')

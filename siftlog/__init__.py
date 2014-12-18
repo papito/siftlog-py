@@ -143,34 +143,60 @@ class SiftLog(logging.LoggerAdapter):
         payload = self._get_log_stmt(level, msg, *args, **kwargs)
         self.logger.log(level, payload)
 
+
 class ColorStreamHandler(logging.StreamHandler):
     """
         This is  modeled after https://gist.github.com/vsajip/758430
     """
 
+    BLACK   = 'black'
+    RED     = 'red'
+    GREEN   = 'green'
+    YELLOW  = 'yellow'
+    BLUE    = 'blue'
+    MAGENTA = 'magenta'
+    CYAN    = 'cyan'
+    WHITE   = 'white'
+
     # color names to indices
-    COLOR_MAP = {
-        'black': 0,
-        'red': 1,
-        'green': 2,
-        'yellow': 3,
-        'blue': 4,
-        'magenta': 5,
-        'cyan': 6,
-        'white': 7,
+    _COLOR_MAP = {
+        BLACK: 0,
+        RED: 1,
+        GREEN: 2,
+        YELLOW: 3,
+        BLUE: 4,
+        MAGENTA: 5,
+        CYAN: 6,
+        WHITE: 7,
     }
  
     # levels to (background, foreground, bold/intense)
-    LEVEL_MAP = {
-        logging.DEBUG: (None, 'blue', False),
-        logging.INFO: (None, 'green', False),
-        logging.WARNING: (None, 'yellow', False),
-        logging.ERROR: (None, 'red', True),
-        logging.CRITICAL: ('red', 'white', True),
+    _LEVEL_MAP = {
+        logging.DEBUG: (None, BLUE, False),
+        logging.INFO: (None, GREEN, False),
+        logging.WARNING: (None, YELLOW, False),
+        logging.ERROR: (None, RED, True),
+        logging.CRITICAL: (RED, WHITE, True),
     }
+
+    @staticmethod
+    def set_color(level=None, bg=None, fg=None, bold=False):
+        assert level
+
+        if bg and bg not in ColorStreamHandler._COLOR_MAP:
+            raise RuntimeError('Background color {} is invalid'.format(bg))
+
+        if fg and fg not in ColorStreamHandler._COLOR_MAP:
+            raise RuntimeError('Foreground color {} is invalid'.format(fg))
+
+        if not isinstance(bold, bool):
+            raise RuntimeError('Bold flag must be a True/False')
+        
+        ColorStreamHandler._LEVEL_MAP[level] = (bg, fg, bold)
+    
     csi = '\x1b['
     reset = '\x1b[0m'
- 
+
     @property
     def is_tty(self):
         isatty = getattr(self.stream, 'isatty', None)
@@ -197,13 +223,13 @@ class ColorStreamHandler(logging.StreamHandler):
     def colorize(self, message, record):
         json_rec = json.loads(message)
         
-        if record.levelno in self.LEVEL_MAP:
-            bg, fg, bold = self.LEVEL_MAP[record.levelno]
+        if record.levelno in self._LEVEL_MAP:
+            bg, fg, bold = self._LEVEL_MAP[record.levelno]
             params = []
-            if bg in self.COLOR_MAP:
-                params.append(str(self.COLOR_MAP[bg] + 40))
-            if fg in self.COLOR_MAP:
-                params.append(str(self.COLOR_MAP[fg] + 30))
+            if bg in self._COLOR_MAP:
+                params.append(str(self._COLOR_MAP[bg] + 40))
+            if fg in self._COLOR_MAP:
+                params.append(str(self._COLOR_MAP[fg] + 30))
             if bold:
                 params.append('1')
             if params:
@@ -222,10 +248,10 @@ class ColorStreamHandler(logging.StreamHandler):
             # bold the JSON keys
             bg, fg, bold = None, None, True
             params = []
-            if bg in self.COLOR_MAP:
-                params.append(str(self.COLOR_MAP[bg] + 40))
-            if fg in self.COLOR_MAP:
-                params.append(str(self.COLOR_MAP[fg] + 30))
+            if bg in self._COLOR_MAP:
+                params.append(str(self._COLOR_MAP[bg] + 40))
+            if fg in self._COLOR_MAP:
+                params.append(str(self._COLOR_MAP[fg] + 30))
             if bold:
                 params.append('1')
 
