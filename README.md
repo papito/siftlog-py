@@ -50,6 +50,41 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
+#### Color
+To colorize your JSON logs, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
+are being output to a file, or on systems that are not POSIX (Will not work on Windows for now).
+
+```python
+from siftlog import SiftLog, ColorStreamHandler
+
+logger = logging.getLogger()
+handler = ColorStreamHandler(sys.stdout)
+logger.addHandler(handler)
+```
+
+##### Different colors
+You can change font background, text color, and boldness.
+
+```python
+from siftlog import ColorStreamHandler
+
+
+handler = ColorStreamHandler(sys.stdout)
+handler.set_color(
+    logging.DEBUG, bg=handler.WHITE, fg=handler.BLUE, bold=True
+)
+```
+
+##### Supported colors
+ * __ColorStreamHandler.BLACK__
+ * __ColorStreamHandler.RED__
+ * __ColorStreamHandler.GREEN__
+ * __ColorStreamHandler.YELLOW__
+ * __ColorStreamHandler.BLUE__
+ * __ColorStreamHandler.MAGENTA__
+ * __ColorStreamHandler.CYAN__
+ * __ColorStreamHandler.WHITE__
+
 In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html)
 
 #### Constants (re-occuring values)
