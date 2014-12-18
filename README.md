@@ -68,7 +68,6 @@ You can change font background, text color, and boldness.
 ```python
 from siftlog import ColorStreamHandler
 
-
 handler = ColorStreamHandler(sys.stdout)
 handler.set_color(
     logging.DEBUG, bg=handler.WHITE, fg=handler.BLUE, bold=True
