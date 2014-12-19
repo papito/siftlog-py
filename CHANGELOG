@@ -1,11 +1,15 @@
+v0.2
+=====
+* Adding 'ColorStreamHandler' on POSIX systems
+
+v0.13
+=====
+* Getting rid if class variables
+* Ability to customize caller info
+
 v0.12
 =====
 * Fixed the logic that finds the log caller to intelligently traverse the 
   stack as opposed to bold and rather mysterious assumptions.
 * Adding back the `warn()` alias for `warning()`, now that the caller logic is updated
 * Removing the concept of tag prefix
-
-v0.13
-=====
-* Getting rid if class variables
-* Ability to customize caller info
