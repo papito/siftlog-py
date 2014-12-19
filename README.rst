@@ -77,7 +77,7 @@ handler <https://docs.python.org/2/library/logging.handlers.html>`__
 Color
 ^^^^^
 
-To colorize your JSON logs, attach the ``ColorStreamHandler`` to your
+For enhanced flamboyancy, attach the ``ColorStreamHandler`` to your
 logger. The output will not have color if the logs are being output to a
 file, or on systems that are not POSIX (will not work on Windows for
 now).
@@ -95,7 +95,7 @@ now).
 Different colors
 ''''''''''''''''
 
-You can change font background, text color, and boldness.
+You can change font background, text color, and boldness:
 
 .. code:: python
 

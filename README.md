@@ -53,7 +53,7 @@ log = SiftLog(logger)
 In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html)
 
 #### Color
-To colorize your JSON logs, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
+For enhanced flamboyancy, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
 are being output to a file, or on systems that are not POSIX (will not work on Windows for now).
 
 ```python
@@ -67,7 +67,7 @@ log = SiftLog(logger)
 ```
 
 ##### Different colors
-You can change font background, text color, and boldness.
+You can change font background, text color, and boldness:
 
 ```python
 from siftlog import ColorStreamHandler
