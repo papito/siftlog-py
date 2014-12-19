@@ -71,6 +71,9 @@ Logging to console
 
     log = SiftLog(logger)
 
+In this fashion, you can direct the JSON logs to `any logging
+handler <https://docs.python.org/2/library/logging.handlers.html>`__
+
 Color
 ^^^^^
 
@@ -86,6 +89,8 @@ now).
     logger = logging.getLogger()
     handler = ColorStreamHandler(sys.stdout)
     logger.addHandler(handler)
+
+    log = SiftLog(logger)
 
 Different colors
 ''''''''''''''''
@@ -112,9 +117,6 @@ Supported colors
 -  ColorStreamHandler.MAGENTA
 -  ColorStreamHandler.CYAN
 -  ColorStreamHandler.WHITE
-
-In this fashion, you can direct the JSON logs to `any logging
-handler <https://docs.python.org/2/library/logging.handlers.html>`__
 
 Constants (re-occuring values)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

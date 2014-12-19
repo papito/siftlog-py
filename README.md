@@ -50,6 +50,7 @@ logger.addHandler(handler)
 
 log = SiftLog(logger)
 ```
+In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html)
 
 #### Color
 To colorize your JSON logs, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
@@ -61,6 +62,8 @@ from siftlog import SiftLog, ColorStreamHandler
 logger = logging.getLogger()
 handler = ColorStreamHandler(sys.stdout)
 logger.addHandler(handler)
+
+log = SiftLog(logger)
 ```
 
 ##### Different colors
@@ -84,8 +87,6 @@ handler.set_color(
  * ColorStreamHandler.MAGENTA
  * ColorStreamHandler.CYAN
  * ColorStreamHandler.WHITE
-
-In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html)
 
 #### Constants (re-occuring values)
 You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
