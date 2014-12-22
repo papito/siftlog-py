@@ -1,4 +1,5 @@
 siftlog.egg*
 nose-*
 *.pyc
+dist
 
