@@ -7,7 +7,7 @@ Sift Log - JSON logging adapter for Python (now in color)
 * Variable substitution
 * Specifies where log calls are made from
 * Meant to be used with core Python logging (formatters, handlers, etc)
-* Colorized logs on a console (experimental)
+* Colorized logs on a console (POSIX only)
 * `TRACE` log level built-in
  
 ## Examples
@@ -23,7 +23,7 @@ log.debug('Creating new user', 'MONGO', 'STORAGE')
 ```
 `{"msg": "Creating new user", "time": "12-12-14 10:12:09 EST", "tags": ["MONGO", "STORAGE"], "level": "DEBUG", "loc": "test:log_test:20"}`
 
-#### Adding JSON keys
+#### Appending more data
 ```python
 log.debug('Some key', is_admin=True, username='papito')
 ```
@@ -102,14 +102,14 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 #### Custom time format
 ```python
 log = SiftLog(logger)
-SiftLog.log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+SiftLog.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 ```
 Define the format as accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
 
 #### Custom location format
 ```python
 log = SiftLog(logger)
-SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
+SiftLog.LOCATION_FORMAT = '$module:$method:$line_no'
 ```
 The format should be a string containing any of the following variables:
 

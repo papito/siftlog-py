@@ -10,7 +10,7 @@ Features
 -  Variable substitution
 -  Specifies where log calls are made from
 -  Meant to be used with core Python logging (formatters, handlers, etc)
--  Colorized logs on a console (experimental)
+-  Colorized logs on a console (POSIX only)
 -  ``TRACE`` log level built-in
 
 Examples
@@ -34,8 +34,8 @@ Logging with tags
 
 ``{"msg": "Creating new user", "time": "12-12-14 10:12:09 EST", "tags": ["MONGO", "STORAGE"], "level": "DEBUG", "loc": "test:log_test:20"}``
 
-Adding JSON keys
-^^^^^^^^^^^^^^^^
+Appending more data
+^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -140,7 +140,7 @@ Custom time format
 .. code:: python
 
     log = SiftLog(logger)
-    SiftLog.log.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+    SiftLog.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
 
 Define the format as accepted by
 `time.strftime() <https://docs.python.org/2/library/time.html#time.strftime>`__
@@ -151,7 +151,7 @@ Custom location format
 .. code:: python
 
     log = SiftLog(logger)
-    SiftLog.log.LOCATION_FORMAT = '$module:$method:$line_no'
+    SiftLog.LOCATION_FORMAT = '$module:$method:$line_no'
 
 The format should be a string containing any of the following variables:
 

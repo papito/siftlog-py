@@ -1,3 +1,7 @@
+v0.21
+=====
+* Documentation fixes
+
 v0.2
 =====
 * Adding 'ColorStreamHandler' on POSIX systems
