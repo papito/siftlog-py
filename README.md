@@ -130,7 +130,8 @@ The following can be redefined:
  * SiftLog.TIME (default `time`)
 
 As in:
+
 ```python
 log = SiftLog(logger)
-SiftLog.log.MESSAGE = 'MESSAGE'
+SiftLog.log.MESSAGE = "MESSAGE"
 ```

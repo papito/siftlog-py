@@ -174,4 +174,10 @@ The following can be redefined:
 -  SiftLog.TAGS (default ``tags``)
 -  SiftLog.TIME (default ``time``)
 
-As in: ``python log = SiftLog(logger) SiftLog.log.MESSAGE = 'MESSAGE'``
+As in:
+
+.. code:: python
+
+    log = SiftLog(logger)
+    SiftLog.log.MESSAGE = "MESSAGE"
+
