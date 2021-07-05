@@ -1,5 +1,7 @@
 siftlog.egg*
+dist
 nose-*
 *.pyc
-dist
-
+*.iml
+.idea/
+*.swp
