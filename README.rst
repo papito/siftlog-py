@@ -230,3 +230,30 @@ SiftLog.log.MESSAGE = "MESSAGE"
 
 ```
 
+# Development flow
+==================
+
+`Poetry` is used to manage the dependencies.
+
+Most things can be accessed via the Makefile, if you have Make installed.
+
+	# make sure Python 3.8 or higher is ued
+
+	poetry use path/to/python/3.8\-ish
+
+	# make sure correct Python is used
+
+	make info
+
+	# install dependencies
+
+	make install
+
+	# run tests
+
+	make test
+
+	# formatting, linting, and type checking
+
+	make lint
+
