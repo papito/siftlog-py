@@ -1,3 +1,11 @@
+v0.9.0
+=====
+* Migrated to Poetry
+* Lowest supported Python is 3.8
+* Added Makefile for streamlined dev workflow
+* Added tools: Flake8, Black
+* Added mypy type checking
+
 v0.21
 =====
 * Documentation fixes
@@ -13,7 +21,7 @@ v0.13
 
 v0.12
 =====
-* Fixed the logic that finds the log caller to intelligently traverse the 
+* Fixed the logic that finds the log caller to intelligently traverse the
   stack as opposed to bold and rather mysterious assumptions.
 * Adding back the `warn()` alias for `warning()`, now that the caller logic is updated
 * Removing the concept of tag prefix
