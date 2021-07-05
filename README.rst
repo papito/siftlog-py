@@ -237,7 +237,7 @@ SiftLog.log.MESSAGE = "MESSAGE"
 
 Most things can be accessed via the Makefile, if you have Make installed.
 
-	# make sure Python 3.8 or higher is ued
+	# use the right Python
 
 	poetry use path/to/python/3.8\-ish
 
