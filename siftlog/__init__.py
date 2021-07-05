@@ -2,10 +2,9 @@ import inspect
 import json
 import logging
 import os
-import string
 import time
 from string import Template
-from typing import List, Optional
+from typing import Dict, List
 
 logging.TRACE = 5  # type: ignore
 logging.addLevelName(logging.TRACE, "TRACE")  # type: ignore
@@ -159,7 +158,7 @@ class ColorStreamHandler(logging.StreamHandler):
     WHITE = "white"
 
     # color names to indices
-    _COLOR_MAP = {
+    _COLOR_MAP: Dict[str, int] = {
         BLACK: 0,
         RED: 1,
         GREEN: 2,
@@ -225,13 +224,14 @@ class ColorStreamHandler(logging.StreamHandler):
     def output_colorized(self, message):
         self.stream.write(message)
 
+    # noinspection DuplicatedCode
     def colorize(self, message, record):
         json_rec = json.loads(message)
 
         if record.levelno in self._LEVEL_MAP:
             # bold the JSON keys
             bg, fg, bold = self._LEVEL_MAP[record.levelno]
-            params: List[string] = []
+            params: List[str] = []
 
             if bg in self._COLOR_MAP:
                 params.append(str(self._COLOR_MAP[bg] + 40))
@@ -241,15 +241,6 @@ class ColorStreamHandler(logging.StreamHandler):
                 params.append("1")
 
             if params:
-                if SiftLog.LEVEL in json_rec:
-                    level = '"{0}": "{1}"'.format(
-                        SiftLog.LEVEL, json_rec[SiftLog.LEVEL]
-                    )
-                    color_level = "".join(
-                        (self.csi, ";".join(params), "m", level, self.reset)
-                    )
-                    message = message.replace(level, color_level)
-
                 if SiftLog.MESSAGE in json_rec:
                     msg = '"{0}": "{1}"'.format(
                         SiftLog.MESSAGE, json_rec[SiftLog.MESSAGE]
@@ -264,12 +255,13 @@ class ColorStreamHandler(logging.StreamHandler):
                 continue
 
             # bold the JSON keys
-            bg, fg, bold = Optional[string], Optional[string], Optional[string]
-            params: List[string] = []
+            bg, fg, bold = str, str, str
+            params: List[str] = []
+
             if bg in self._COLOR_MAP:
-                params.append(str(self._COLOR_MAP[bg] + 40))
+                params.append(str(self._COLOR_MAP[bg] + 40))  # type: ignore
             if fg in self._COLOR_MAP:
-                params.append(str(self._COLOR_MAP[fg] + 30))
+                params.append(str(self._COLOR_MAP[fg] + 30))  # type: ignore
             if bold:
                 params.append("1")
 
