@@ -31,4 +31,4 @@ black = "^21.6b0"
 mdToRst = "^1.1.0"
 
 [build-system]
-requires = ["poetry>=1.1.7"]
+requires = ["setuptools", "poetry>=1.1.7"]
