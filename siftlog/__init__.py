@@ -5,10 +5,10 @@ import os
 import string
 import time
 from string import Template
-from typing import Optional, List
+from typing import List, Optional
 
-logging.TRACE = 5
-logging.addLevelName(logging.TRACE, "TRACE")
+logging.TRACE = 5  # type: ignore
+logging.addLevelName(logging.TRACE, "TRACE")  # type: ignore
 
 
 class SiftLog(logging.LoggerAdapter):
@@ -78,7 +78,9 @@ class SiftLog(logging.LoggerAdapter):
         ]
 
         # the first siftlog frame from back of the stack
-        siftlog_frame = next(x for x in frames if lambda idx, f, m: m and m.__name__ != "siftlog")
+        siftlog_frame = next(
+            x for x in frames if lambda idx, f, m: m and m.__name__ != "siftlog"
+        )
         # its index
         siftlog_frame_idx = siftlog_frame[0]
 
@@ -170,7 +172,7 @@ class ColorStreamHandler(logging.StreamHandler):
 
     # levels to (background, foreground, bold/intense)
     _LEVEL_MAP = {
-        logging.TRACE: (None, None, False),
+        logging.TRACE: (None, None, False),  # type: ignore
         logging.DEBUG: (None, BLUE, False),
         logging.INFO: (None, GREEN, False),
         logging.WARNING: (None, YELLOW, False),

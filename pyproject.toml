@@ -23,6 +23,7 @@ nose = "^1.3.7"
 flake8 = "^3.9.2"
 isort = "^5.9.1"
 black = "^21.6b0"
+mdToRst = "^1.1.0"
 
 [build-system]
 requires = ["poetry>=1.1.7"]
