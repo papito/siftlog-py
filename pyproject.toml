@@ -11,7 +11,7 @@ authors = ["Andrei Taranchenko <drey10@gmail.com>"]
 keywords = ["logging", "logs"]
 
 include = [
-    "LICENSE", "MANIFEST.in", "README.rst"
+    "LICENSE", "README.rst"
 ]
 
 packages = [
