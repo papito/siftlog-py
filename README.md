@@ -69,7 +69,7 @@ log = SiftLog(logger)
 ##### Performance
 
 While the above should play, it's highly recommended that the color handler is only 
-attached conditionally or local development. Too many log statements could otherwise become
+attached conditionally for local development. Too many log statements could otherwise become
 expensive in terms of CPU.
 
 
