@@ -251,19 +251,11 @@ class ColorStreamHandler(logging.StreamHandler):
                     message = message.replace(msg, color_msg)
 
         for key in json_rec.keys():
-            if key in [SiftLog.MESSAGE, SiftLog.LEVEL]:
+            if key in [SiftLog.MESSAGE]:
                 continue
 
             # bold the JSON keys
-            bg, fg, bold = str, str, str
-            params: List[str] = []
-
-            if bg in self._COLOR_MAP:
-                params.append(str(self._COLOR_MAP[bg] + 40))  # type: ignore
-            if fg in self._COLOR_MAP:
-                params.append(str(self._COLOR_MAP[fg] + 30))  # type: ignore
-            if bold:
-                params.append("1")
+            params: List[str] = ["1"]
 
             val = '"%s":' % key
             color_val = (

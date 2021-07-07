@@ -1,3 +1,8 @@
+v0.9.2
+=====
+* Log level JSON key was not being emphasized when color handler was on (broken in Python 3.x migration)
+* Removed cruft code related to the above
+
 v0.9.1
 =====
 * Migrated to Poetry
