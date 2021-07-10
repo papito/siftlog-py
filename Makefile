@@ -4,7 +4,6 @@ install:
 	poetry install
 
 build:
-	poetry run mdToRst README.md > README.rst
 	poetry build
 
 lint:
@@ -15,6 +14,9 @@ lint:
 
 test:
 	@poetry run nosetests
+
+visual:
+	@poetry run nosetests -s
 
 info:
 	@poetry env info

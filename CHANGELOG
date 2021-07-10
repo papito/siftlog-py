@@ -1,3 +1,9 @@
+v0.9.3
+=====
+* Adding ColorPlainTextStreamHandler for easy-to-read colorized logs
+* ColorJsonStreamHandler is the new ColorStreamHandler
+* Fixing the caller location code (broken in Python 3.x migration)
+
 v0.9.2
 =====
 * Log level JSON key was not being emphasized when color handler was on (broken in Python 3.x migration)

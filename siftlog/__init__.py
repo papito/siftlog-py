@@ -1,4 +1,5 @@
 import inspect
+import itertools
 import json
 import logging
 import os
@@ -18,8 +19,9 @@ class SiftLog(logging.LoggerAdapter):
     TIME = "time"
     TIME_FORMAT = "%d-%m-%y %H:%m:%S %Z"
     LOCATION_FORMAT = "$module:$method:$line_no"
+    TRACE = 5  # for typing convenience
 
-    def __init__(self, logger, **kwargs):
+    def __init__(self, logger: logging.Logger, **kwargs):
         super(SiftLog, self).__init__(logger, {})
         self._constants = kwargs
 
@@ -68,7 +70,8 @@ class SiftLog(logging.LoggerAdapter):
 
         return Template(self.LOCATION_FORMAT).safe_substitute(caller)
 
-    def _get_caller_info(self):
+    @staticmethod
+    def _get_caller_info():
         # pull the frames from the current stack, reversed,
         # since it's easier to find the first siftlog frame
         frames = [
@@ -76,10 +79,12 @@ class SiftLog(logging.LoggerAdapter):
             for idx, frm in enumerate(reversed(inspect.stack()))
         ]
 
-        # the first siftlog frame from back of the stack
-        siftlog_frame = next(
-            x for x in frames if lambda idx, f, m: m and m.__name__ != "siftlog"
+        # travel the stack from behind, looking for the first siftlog frame
+        res = itertools.dropwhile(
+            lambda frame: frame[2] and frame[2].__name__ != "siftlog", frames
         )
+        # the first siftlog frame from back of the stack
+        siftlog_frame = next(res)
         # its index
         siftlog_frame_idx = siftlog_frame[0]
 
@@ -179,6 +184,9 @@ class ColorStreamHandler(logging.StreamHandler):
         logging.CRITICAL: (RED, WHITE, True),
     }
 
+    csi = "\x1b["
+    reset = "\x1b[0m"
+
     @staticmethod
     def set_color(level=None, bg=None, fg=None, bold=False):
         assert level
@@ -196,9 +204,6 @@ class ColorStreamHandler(logging.StreamHandler):
             raise RuntimeError("Bold flag must be a True/False")
 
         ColorStreamHandler._LEVEL_MAP[level] = (bg, fg, bold)
-
-    csi = "\x1b["
-    reset = "\x1b[0m"
 
     @property
     def is_tty(self):
@@ -224,10 +229,7 @@ class ColorStreamHandler(logging.StreamHandler):
     def output_colorized(self, message):
         self.stream.write(message)
 
-    # noinspection DuplicatedCode
-    def colorize(self, message, record):
-        json_rec = json.loads(message)
-
+    def get_fabulous_params(self, record) -> List[str]:
         if record.levelno in self._LEVEL_MAP:
             # bold the JSON keys
             bg, fg, bold = self._LEVEL_MAP[record.levelno]
@@ -240,26 +242,30 @@ class ColorStreamHandler(logging.StreamHandler):
             if bold:
                 params.append("1")
 
-            if params:
-                if SiftLog.MESSAGE in json_rec:
-                    msg = '"{0}": "{1}"'.format(
-                        SiftLog.MESSAGE, json_rec[SiftLog.MESSAGE]
-                    )
+            return params
+
+        return []
+
+    def make_fabulous(self, message, record):
+        json_rec = json.loads(message)
+        # bold the JSON keys
+        bold_params = ["1"]
+
+        for key in json_rec.keys():
+            if record.levelno in self._LEVEL_MAP and key == SiftLog.MESSAGE:
+                fabulous_params = self.get_fabulous_params(record)
+                if fabulous_params and SiftLog.MESSAGE in json_rec:
+                    msg = '"{0}"'.format(json_rec[SiftLog.MESSAGE])
                     color_msg = "".join(
-                        (self.csi, ";".join(params), "m", msg, self.reset)
+                        (self.csi, ";".join(fabulous_params), "m", msg, self.reset)
                     )
                     message = message.replace(msg, color_msg)
 
-        for key in json_rec.keys():
-            if key in [SiftLog.MESSAGE]:
-                continue
-
-            # bold the JSON keys
-            params: List[str] = ["1"]
-
-            val = '"%s":' % key
+            val = '"{0}":'.format(key)
             color_val = (
-                '"' + "".join((self.csi, ";".join(params), "m", key, self.reset)) + '":'
+                '"'
+                + "".join((self.csi, ";".join(bold_params), "m", key, self.reset))
+                + '":'
             )
             message = message.replace(val, color_val)
 
@@ -271,5 +277,49 @@ class ColorStreamHandler(logging.StreamHandler):
             message = message.strip()
             lines = len(message.split("\n"))
             if lines == 1:
-                message = self.colorize(message, record)
+                message = self.make_fabulous(message, record)
+        return message
+
+
+class ColorJsonStreamHandler(ColorStreamHandler):  # alias
+    pass
+
+
+class ColorPlainTextStreamHandler(ColorStreamHandler):
+    def make_fabulous(self, message, record):
+        json_rec: Dict[str, str] = json.loads(message)
+        fabulous_params: List[str] = self.get_fabulous_params(record)
+
+        if fabulous_params and SiftLog.LEVEL in json_rec:
+            message = "".join(
+                (
+                    self.csi,
+                    ";".join(fabulous_params),
+                    "m",
+                    json_rec[SiftLog.LEVEL],
+                    self.reset,
+                    ": ",
+                    json_rec[SiftLog.MESSAGE],
+                )
+            )
+
+        # bold the rest of the keys
+        bold_params: List[str] = ["1"]
+        for key, val in json_rec.items():
+            if key in [SiftLog.LEVEL, SiftLog.MESSAGE]:
+                continue
+
+            message += "".join(
+                (
+                    ", [",
+                    self.csi,
+                    ";".join(bold_params),
+                    "m",
+                    key,
+                    self.reset,
+                    "] ",
+                    str(val),
+                )
+            )
+
         return message

@@ -1,6 +1,8 @@
 Sift Log - JSON logging adapter for Python (now in color)
 ===============
 
+![](https://raw.githubusercontent.com/papito/siftlog-py/master/assets/screen.png)
+
 ## Features
 * Tag log statements with arbitrary values for easier grouping and analysis
 * Add keyword arguments that are converted to JSON values
@@ -50,7 +52,7 @@ logger.addHandler(handler)
 
 log = SiftLog(logger)
 ```
-In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html)
+In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html).
 
 #### Color
 For enhanced flamboyancy, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
@@ -66,11 +68,12 @@ logger.addHandler(handler)
 log = SiftLog(logger)
 ```
 
+For development, you can opt in to use `ColorPlainTextStreamHandler`, for logs that are easier to parse visually.
+
 ##### Performance
 
 While the above should play, it's highly recommended that the color handler is only 
-attached conditionally for local development. Too many log statements could otherwise become
-expensive in terms of CPU.
+attached conditionally for local development.
 
 
 ##### Different colors
@@ -148,6 +151,7 @@ SiftLog.log.MESSAGE = "MESSAGE"
 `Poetry` is used to manage the dependencies.
 
 Most things can be accessed via the Makefile, if you have Make installed.
+Without Make, just inspect the Makefile for the available commands.
 
     # use the right Python
     poetry use path/to/python/3.8-ish
@@ -157,5 +161,7 @@ Most things can be accessed via the Makefile, if you have Make installed.
     make install
     # run tests
     make test
+    # run visual tests (same as tests but with output)
+	make visual
     # formatting, linting, and type checking
     make lint
