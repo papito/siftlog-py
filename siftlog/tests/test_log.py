@@ -1,10 +1,12 @@
 import datetime
+import inspect
 import json
 import logging
 import unittest
 from string import Template
 
 from siftlog import SiftLog
+from siftlog.tests import print_method_name
 
 
 class TestLogger(unittest.TestCase):

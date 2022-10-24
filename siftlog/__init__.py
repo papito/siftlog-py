@@ -311,7 +311,7 @@ class ColorPlainTextStreamHandler(ColorStreamHandler):
 
             message += "".join(
                 (
-                    ", [",
+                    " [",
                     self.csi,
                     ";".join(bold_params),
                     "m",

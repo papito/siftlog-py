@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "siftlog-py"
 version = "0.9.3"
-description = "Structured JSON logging"
+description = "JSON and human-readable logging with context"
 
 license = "MIT"
 repository = "https://github.com/papito/siftlog-py"
 readme = "README.md"
 
 authors = ["Andrei Taranchenko <drey10@gmail.com>"]
-keywords = ["logging", "logs"]
+keywords = ["logging", "logs", "structured"]
 
 include = [
     "LICENSE", "README.md"

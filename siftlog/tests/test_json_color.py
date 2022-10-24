@@ -3,11 +3,13 @@ import sys
 import unittest
 
 from siftlog import ColorJsonStreamHandler, SiftLog
+from siftlog.tests import print_method_name
 
 
 # noinspection DuplicatedCode
 class TestJsonColor(unittest.TestCase):
     def test_defaults(self):
+        print_method_name()
         logger = logging.getLogger()
         logger.setLevel(SiftLog.TRACE)
         handler = ColorJsonStreamHandler(sys.stdout)
@@ -22,6 +24,7 @@ class TestJsonColor(unittest.TestCase):
         log.critical("critical", "tag1", "tag2", key1="key1", key2="key2")
 
     def test_changed_key_names(self):
+        print_method_name()
         logger = logging.getLogger()
         logger.setLevel(SiftLog.TRACE)
         handler = ColorJsonStreamHandler(sys.stdout)
@@ -55,6 +58,7 @@ class TestJsonColor(unittest.TestCase):
             )
 
     def test_correct_usage(self):
+        print_method_name()
         handler = ColorJsonStreamHandler(sys.stdout)
 
         handler.set_color(logging.INFO, bg=handler.GREEN, fg=handler.WHITE, bold=True)
