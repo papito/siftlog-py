@@ -146,6 +146,32 @@ log = SiftLog(logger)
 SiftLog.log.MESSAGE = "MESSAGE"
 ```
 
+## Creating loggers with context
+You can sub-class the logger to create a new logger which "hydrates" the messages with metadata.
+
+For example here, when using the Flask web framework, we want to add request ID to each log statement,
+so we can later collect the log sequence per request:
+
+```python
+class FlaskRequestAwareLogger(SiftLog):
+    def to_json(self, data):
+        if flask.has_request_context():
+            data["req_id"] = flask.g.request_id
+        return super(FlaskRequestAwareLogger, self).to_json(data)
+```
+
+But this is obviously not enough, we need more adapters, for there is no satisfaction yet.
+
+We can add another adapter on top of the above, to add a "tier" logger, which automatically logs the 
+part of the system the log is coming from (storage, HTTP, services)
+
+```python
+class DbLogger(FlaskRequestAwareLogger):
+    def to_json(self, data):
+        data["tier"] = "DB"
+        return super(DbLogger, self).to_json(data)
+```
+
 ## Development flow
 
 `Poetry` is used to manage the dependencies.
