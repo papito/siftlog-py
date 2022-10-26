@@ -20,6 +20,17 @@ class TestLogger(unittest.TestCase):
         self.assertEquals(res["pid"], 12345)
         self.assertEquals(res["app"], "APP NAME")
 
+    def test_arbitrary_dynamic_constants(self):
+        func = lambda: "FUNC_RESULT"
+
+        logger = SiftLog(self.core_logger, pid=12345, app="APP NAME", func=func)
+
+        res = json.loads(logger._get_log_stmt(logging.INFO, None))
+
+        self.assertEquals(res["pid"], 12345)
+        self.assertEquals(res["app"], "APP NAME")
+        self.assertEquals(res["func"], "FUNC_RESULT")
+
     def test_simple_log_statement(self):
         stmt = "simple log statement"
         res = json.loads(self.sift_logger._get_log_stmt(logging.DEBUG, stmt))

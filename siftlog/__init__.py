@@ -30,6 +30,8 @@ class SiftLog(logging.LoggerAdapter):
 
         kwargs[self.LEVEL] = logging.getLevelName(level)
 
+        self._evaluate_dynamic_values()
+
         # append the optional constants defined on initialization
         kwargs.update(self._constants)
 
@@ -55,6 +57,11 @@ class SiftLog(logging.LoggerAdapter):
             )
 
         return payload
+
+    def _evaluate_dynamic_values(self):
+        for k, v in self._constants.items():
+            if hasattr(v, '__call__'):
+                self._constants[k] = v()
 
     def to_json(self, data):
         return json.dumps(data)
