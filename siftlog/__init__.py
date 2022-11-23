@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import time
+import traceback
 from inspect import isfunction
 from string import Template
 from typing import Dict, List
@@ -58,6 +59,7 @@ class SiftLog(logging.LoggerAdapter):
         try:
             payload = self.to_json(log_data)
         except Exception as ex:
+            traceback.print_exc()
             msg = 'LOGGER EXCEPTION "{0}" in  {1}'.format(str(ex), loc)
             return json.dumps(
                 {"msg": msg, "level": logging.getLevelName(logging.ERROR)}
@@ -233,6 +235,7 @@ class ColorStreamHandler(logging.StreamHandler):
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception:
+            traceback.print_exc()
             self.handleError(record)
 
     def output_colorized(self, message):
