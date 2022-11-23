@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import time
+from inspect import isfunction
 from string import Template
 from typing import Dict, List
 
@@ -19,35 +20,43 @@ class SiftLog(logging.LoggerAdapter):
     TIME = "time"
     TIME_FORMAT = "%d-%m-%y %H:%m:%S %Z"
     LOCATION_FORMAT = "$module:$method:$line_no"
-    TRACE = 5  # for typing convenience
+    TRACE = 5
 
     def __init__(self, logger: logging.Logger, **kwargs):
         super(SiftLog, self).__init__(logger, {})
-        self._constants = kwargs
+        self._constants = {}
+        self._callbacks = {}
+
+        for k, v in kwargs.items():
+            if isfunction(v):
+                self._callbacks[k] = v
+            else:
+                self._constants[k] = v
 
     def _get_log_stmt(self, level, msg, *tags, **kwargs):
         msg = msg or ""
 
-        kwargs[self.LEVEL] = logging.getLevelName(level)
+        log_data = dict(kwargs)
+        log_data.update(self._constants)
+        log_data[self.LEVEL] = logging.getLevelName(level)
 
-        # append the optional constants defined on initialization
-        kwargs.update(self._constants)
+        for k, v in self._callbacks.items():
+            log_data[k] = v.__call__()
 
-        # add message to the payload, substitute with the passed data
-        kwargs[self.MESSAGE] = Template(msg).safe_substitute(kwargs)
+        log_data[self.MESSAGE] = Template(msg).safe_substitute(log_data)
 
         # caller location
         loc = self.get_caller_info()
         if loc:
-            kwargs[self.LOCATION] = loc
+            log_data[self.LOCATION] = loc
 
-        kwargs[self.TIME] = self.get_timestamp()
+        log_data[self.TIME] = self.get_timestamp()
 
         if tags:
-            kwargs[self.TAGS] = tags
+            log_data[self.TAGS] = tags
 
         try:
-            payload = self.to_json(kwargs)
+            payload = self.to_json(log_data)
         except Exception as ex:
             msg = 'LOGGER EXCEPTION "{0}" in  {1}'.format(str(ex), loc)
             return json.dumps(

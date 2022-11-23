@@ -9,7 +9,7 @@ build:
 lint:
 	@poetry run isort siftlog/
 	@poetry run black siftlog/
-	@poetry run flake8
+	@poetry run flake8 siftlog/__init__.py siftlog/tests/
 	@poetry run mypy siftlog/
 
 test:

@@ -1,12 +1,10 @@
 import datetime
-import inspect
 import json
 import logging
 import unittest
 from string import Template
 
 from siftlog import SiftLog
-from siftlog.tests import print_method_name
 
 
 class TestLogger(unittest.TestCase):
@@ -15,12 +13,37 @@ class TestLogger(unittest.TestCase):
         cls.core_logger = logging.getLogger("siftlog_test")
         cls.sift_logger = SiftLog(cls.core_logger)
 
-    def test_arbitrary_constants(self):
+    def test_constants(self):
         logger = SiftLog(self.core_logger, pid=12345, app="APP NAME")
         res = json.loads(logger._get_log_stmt(logging.INFO, None))
 
         self.assertEquals(res["pid"], 12345)
         self.assertEquals(res["app"], "APP NAME")
+
+    def test_methods_as_constants(self):
+        user_id = "user_id_from_thread_context"
+
+        def get_user_id():
+            return user_id
+
+        request_id = "request_id_from_thread_context"
+
+        def get_request_id():
+            return request_id
+
+        logger = SiftLog(
+            self.core_logger,
+            pid=12345,
+            app="APP NAME",
+            user_id=get_user_id,
+            request_id=get_request_id,
+        )
+        res = json.loads(logger._get_log_stmt(logging.INFO, None))
+
+        self.assertEquals(res["pid"], 12345)
+        self.assertEquals(res["app"], "APP NAME")
+        self.assertEquals(res["user_id"], user_id)
+        self.assertEquals(res["request_id"], request_id)
 
     def test_simple_log_statement(self):
         stmt = "simple log statement"
@@ -45,7 +68,6 @@ class TestLogger(unittest.TestCase):
 
     def test_custom_adapter(self):
         def datetime_handler(obj):
-
             if isinstance(obj, datetime.datetime) or isinstance(obj, datetime.date):
                 return obj.isoformat()
             else:

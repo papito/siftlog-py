@@ -181,13 +181,24 @@ Without Make, just inspect the Makefile for the available commands.
 
     # use the right Python
     poetry use path/to/python/3.8-ish
+    
     # make sure correct Python is used
     make info
+    
     # install dependencies
     make install
+    
     # run tests
     make test
+    
     # run visual tests (same as tests but with output)
 	make visual
+    
     # formatting, linting, and type checking
     make lint
+
+### Running a single test
+
+In the standard Nosetests way:
+
+    poetry run nosetests siftlog/tests/test_log.py:TestLogger.test_tags

@@ -18,7 +18,6 @@ packages = [
     { include = "siftlog", from = "." }
 ]
 
-
 [tool.poetry.dependencies]
 python = "^3.8"
 
