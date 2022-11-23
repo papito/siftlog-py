@@ -98,8 +98,8 @@ handler.set_color(
  * ColorStreamHandler.CYAN
  * ColorStreamHandler.WHITE
 
-#### Constants (re-occuring values)
-You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message (recommended). This is done upon log adapter initialization:
+#### Constants (re-occurring values)
+You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message. This is done upon log adapter initialization:
 
 ```python
 import os
@@ -108,6 +108,22 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 ```
 `{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
 
+### Dynamic logging context - callbacks
+Often you need to add dynamic contextual data to log statements, as opposed to simple constants/literals. You can
+pass methods to SiftLog on initialization that will be called on every logging call.
+
+Logging request ids or user ids are very common use cases, so to log a thread-local property with Flask, for example,
+we can do the following:
+
+```python
+import flask
+
+def get_user_id():
+    if flask.has_request_context():
+        return flask.g.user_id
+
+user_aware_logger = SiftLog(u_id=get_user_id)
+```
 
 #### Custom time format
 ```python
@@ -146,32 +162,6 @@ log = SiftLog(logger)
 SiftLog.log.MESSAGE = "MESSAGE"
 ```
 
-## Creating loggers with context
-You can sub-class the logger to create a new logger which "hydrates" the messages with metadata.
-
-For example here, when using the Flask web framework, we want to add request ID to each log statement,
-so we can later collect the log sequence per request:
-
-```python
-class FlaskRequestAwareLogger(SiftLog):
-    def to_json(self, data):
-        if flask.has_request_context():
-            data["req_id"] = flask.g.request_id
-        return super(FlaskRequestAwareLogger, self).to_json(data)
-```
-
-But this is obviously not enough, we need more adapters, for there is no satisfaction yet.
-
-We can add another adapter on top of the above, to add a "tier" logger, which automatically logs the 
-part of the system the log is coming from (storage, HTTP, services)
-
-```python
-class DbLogger(FlaskRequestAwareLogger):
-    def to_json(self, data):
-        data["tier"] = "DB"
-        return super(DbLogger, self).to_json(data)
-```
-
 ## Development flow
 
 `Poetry` is used to manage the dependencies.
@@ -199,6 +189,6 @@ Without Make, just inspect the Makefile for the available commands.
 
 ### Running a single test
 
-In the standard Nosetests way:
+In the standard Nose tests way:
 
     poetry run nosetests siftlog/tests/test_log.py:TestLogger.test_tags
