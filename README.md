@@ -59,10 +59,10 @@ For enhanced flamboyancy, attach the `ColorStreamHandler` to your logger. The ou
 are being output to a file, or on systems that are not POSIX (will not work on Windows for now).
 
 ```python
-from siftlog import SiftLog, ColorJsonStreamHandler
+from siftlog import SiftLog, ColorStreamHandler
 
 logger = logging.getLogger()
-handler = ColorJsonStreamHandler(sys.stdout)
+handler = ColorStreamHandler(sys.stdout)
 logger.addHandler(handler)
 
 log = SiftLog(logger)
