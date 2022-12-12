@@ -128,9 +128,9 @@ user_aware_logger = SiftLog(u_id=get_user_id)
 #### Custom time format
 ```python
 log = SiftLog(logger)
-SiftLog.TIME_FORMAT = '%d-%m-%y %H:%m:%S %Z'
+SiftLog.TIME_FORMAT = '%Y/%m/%d %H:%M:%S.%f'
 ```
-Define the format as accepted by [time.strftime()](https://docs.python.org/2/library/time.html#time.strftime)
+Define the format as accepted by [strftime()](https://strftime.org/)
 
 #### Custom location format
 ```python

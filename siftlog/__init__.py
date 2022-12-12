@@ -3,8 +3,8 @@ import itertools
 import json
 import logging
 import os
-import time
 import traceback
+from datetime import datetime
 from inspect import isfunction
 from string import Template
 from typing import Dict, List
@@ -19,7 +19,7 @@ class SiftLog(logging.LoggerAdapter):
     LOCATION = "loc"
     TAGS = "tags"
     TIME = "time"
-    TIME_FORMAT = "%d-%m-%y %H:%m:%S %Z"
+    TIME_FORMAT = "%Y/%m/%d %H:%M:%S.%f"
     LOCATION_FORMAT = "$module:$method:$line_no"
     TRACE = 5
 
@@ -71,7 +71,7 @@ class SiftLog(logging.LoggerAdapter):
         return json.dumps(data)
 
     def get_timestamp(self):
-        return time.strftime(self.TIME_FORMAT)
+        return datetime.utcnow().strftime(self.TIME_FORMAT)[:-3]
 
     def get_caller_info(self):
         caller = self._get_caller_info()
