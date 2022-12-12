@@ -1,3 +1,7 @@
+v0.9.5
+=====
+* Millisecond granularity by default
+
 v0.9.4
 =====
 * Support for callbacks to allow for dynamic logging context. Thank you, https://github.com/Kalffman

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "siftlog-py"
-version = "0.9.4"
+version = "0.9.5"
 description = "JSON and human-readable logging with context"
 
 license = "MIT"
