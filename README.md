@@ -65,8 +65,7 @@ log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 ### Dynamic logging context - callbacks
 Often you need to add dynamic contextual data to log statements as opposed to one-time constants. SiftLog can except methods that will provide dynamic information depending on the context.
 
-Logging request IDs or user IDs are very common use cases, so to log a thread-local property with Flask, for example,
-we can do the following:
+Logging request IDs or user IDs is a very common use case. To log a thread-local property with Flask, for example, we can do the following:
 
 ```python
 import flask
