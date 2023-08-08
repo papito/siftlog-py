@@ -47,22 +47,23 @@ log.debug('User "$username" admin? $is_admin', is_admin=False, username='fez')
 ```
 `{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "level": "DEBUG"}`
 
-Note that this is more performant than regular logging. String interpolation is *expensive*, possibly causing significant drag in a system with lots of log statements. With defferred string substituion, a log statement will never gets expanded if it's not being logged at a given level.
+Note that this is more performant than regular logging. String interpolation is *expensive*, possibly causing significant drag in a system with lots of log statements. With defferred string substituion, a log statement will never get expanded if it's not being logged at a given level in the first place.
 
 ### Constants (re-occurring values)
-Logging is more noise than useful if you do not know the context of a log message. Which container is it running on? What environment is it in? Constants can be set up once, and they will stick throughout the lifecycle of the logger:
+Logging is more noise than useful if you do not know the context of a log message. Which container is it running on? What environment is it in? Constants can be set up once, and they will stick throughout the lifecycle of a logger:
 
 
 ```python
 import os
 from siftlog import SiftLog
+
 log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
 ```
 
-`{"msg": "And here I am", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
+`{"msg": "Extremely hardcore", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
 
 ### Dynamic logging context - callbacks
-Often you need to add dynamic contextual data to log statements, as opposed to one-time constants. In addition to constants, SiftLog can also except 
+Often you need to add dynamic contextual data to log statements as opposed to one-time constants. SiftLog can except methods that will provide dynamic information depending on the context.
 
 Logging request IDs or user IDs are very common use cases, so to log a thread-local property with Flask, for example,
 we can do the following:
