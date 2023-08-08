@@ -3,43 +3,84 @@ Sift Log - JSON logging adapter for Python (now in color)
 
 ![](https://raw.githubusercontent.com/papito/siftlog-py/master/assets/screen.png)
 
-## Features
+# Features
 * Tag log statements with arbitrary values for easier grouping and analysis
 * Add keyword arguments that are converted to JSON values
 * Variable substitution
 * Specifies where log calls are made from
-* Meant to be used with core Python logging (formatters, handlers, etc)
 * Colorized logs on a console (POSIX only)
 * `TRACE` log level built-in
  
 ## Examples
-#### A simple log message
-```python
-log.info('Hello')
-```
-`{"msg": "Hello", "time": "12-12-14 10:12:01 EST", "level": "INFO", "loc": "test:log_test:20"}`
+### Setup (with no bells and whistles yet)
 
-#### Logging with tags
+```python
+import logging
+from siftlog import SiftLog
+
+core_logger = logging.getLogger()
+
+logger = SiftLog(
+    core_logger
+)
+
+logger.info('Hello')
+```
+
+`{"msg": "Hello", "time": "12-12-14 10:12:01 EST", "level": "INFO"}`
+
+### Logging with tags
 ```python
 log.debug('Creating new user', 'MONGO', 'STORAGE')
 ```
-`{"msg": "Creating new user", "time": "12-12-14 10:12:09 EST", "tags": ["MONGO", "STORAGE"], "level": "DEBUG", "loc": "test:log_test:20"}`
+`{"msg": "Creating new user",  "tags": ["MONGO", "STORAGE"], "level": "DEBUG",}`
 
-#### Appending more data
+### Appending more data
 ```python
 log.debug('Some key', is_admin=True, username='papito')
 ```
-`{"msg": "Some key", "is_admin": true, "username": "papito", "time": "12-12-14 10:12:04 EST", "level": "DEBUG", "loc": "test:log_test:20"}`
+`{"msg": "Some key", "is_admin": true, "username": "papito", "level": "DEBUG"}`
 
-#### String substitution
+### String substitution
 ```python
 log.debug('User "$username" admin? $is_admin', is_admin=False, username='fez')
 ```
-`{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "time": "12-12-14 10:12:18 EST", "level": "DEBUG", "loc": "test:log_test:20"}`
+`{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "level": "DEBUG"}`
 
+Note that this is more performant than regular logging. String interpolation is *expensive*, possibly causing significant drag in a system with lots of log statements. With defferred string substituion, a log statement will never gets expanded if it's not being logged at a given level.
+
+### Constants (re-occurring values)
+Logging is more noise than useful if you do not know the context of a log message. Which container is it running on? What environment is it in? Constants can be set up once, and they will stick throughout the lifecycle of the logger:
+
+
+```python
+import os
+from siftlog import SiftLog
+log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
+```
+
+`{"msg": "And here I am", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
+
+### Dynamic logging context - callbacks
+Often you need to add dynamic contextual data to log statements, as opposed to one-time constants. In addition to constants, SiftLog can also except 
+
+Logging request IDs or user IDs are very common use cases, so to log a thread-local property with Flask, for example,
+we can do the following:
+
+```python
+import flask
+
+def get_user_id():
+    if flask.has_request_context():
+        return flask.g.user_id
+
+user_aware_logger = SiftLog(u_id=get_user_id)
+```
+
+`{"msg": "Logged in", u_id="200713391", "level": "INFO"}`
 
 ## Setup
-#### Logging to console
+### Logging to console
 ```python
 import sys
 import logging
@@ -54,7 +95,7 @@ log = SiftLog(logger)
 ```
 In this fashion, you can direct the JSON logs to [any logging handler](https://docs.python.org/2/library/logging.handlers.html).
 
-#### Color
+### Color
 For enhanced flamboyancy, attach the `ColorStreamHandler` to your logger. The output will not have color if the logs
 are being output to a file, or on systems that are not POSIX (will not work on Windows for now).
 
@@ -70,13 +111,13 @@ log = SiftLog(logger)
 
 For development, you can opt in to use `ColorPlainTextStreamHandler`, for logs that are easier to parse visually.
 
-##### Performance
+#### Performance
 
 While the above should play, it's highly recommended that the color handler is only 
 attached conditionally for local development.
 
 
-##### Different colors
+#### Different colors
 You can change font background, text color, and boldness:
 
 ```python
@@ -88,7 +129,7 @@ handler.set_color(
 )
 ```
 
-##### Supported colors
+#### Supported colors
  * ColorStreamHandler.BLACK
  * ColorStreamHandler.RED
  * ColorStreamHandler.GREEN
@@ -98,41 +139,14 @@ handler.set_color(
  * ColorStreamHandler.CYAN
  * ColorStreamHandler.WHITE
 
-#### Constants (re-occurring values)
-You can define constants that will appear in every single log message. This is useful, for example, if you'd like to log process PID and hostname with every log message. This is done upon log adapter initialization:
-
-```python
-import os
-from siftlog import SiftLog
-log = SiftLog(logger, pid=os.getpid(), env='INTEGRATION')
-```
-`{"msg": "And here I am", "time": "12-12-14 11:12:24 EST", "pid": 37463, "env": "INTEGRATION", "level": "INFO"}`
-
-### Dynamic logging context - callbacks
-Often you need to add dynamic contextual data to log statements, as opposed to simple constants/literals. You can
-pass methods to SiftLog on initialization that will be called on every logging call.
-
-Logging request ids or user ids are very common use cases, so to log a thread-local property with Flask, for example,
-we can do the following:
-
-```python
-import flask
-
-def get_user_id():
-    if flask.has_request_context():
-        return flask.g.user_id
-
-user_aware_logger = SiftLog(u_id=get_user_id)
-```
-
-#### Custom time format
+### Custom time format
 ```python
 log = SiftLog(logger)
 SiftLog.TIME_FORMAT = '%Y/%m/%d %H:%M:%S.%f'
 ```
 Define the format as accepted by [strftime()](https://strftime.org/)
 
-#### Custom location format
+### Custom location format
 ```python
 log = SiftLog(logger)
 SiftLog.LOCATION_FORMAT = '$module:$method:$line_no'
@@ -144,7 +158,7 @@ The format should be a string containing any of the following variables:
  * `$method`
  * `$module`
 
-#### Custom core key names
+### Custom core key names
 Core keys, such as `msg` and `level` can be overridden, if they clash with common keys you might be using.
 
 The following can be redefined:
