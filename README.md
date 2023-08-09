@@ -47,7 +47,7 @@ log.debug('User "$username" admin? $is_admin', is_admin=False, username='fez')
 ```
 `{"msg": "User \"fez\" admin? False",  "username": "fez", "is_admin": false, "level": "DEBUG"}`
 
-Note that this is more performant than regular logging. String interpolation is *expensive*, possibly causing significant drag in a system with lots of log statements. With defferred string substituion, a log statement will never get expanded if it's not being logged at a given level in the first place.
+Note that this is more performant than regular logging. String interpolation is *expensive*, possibly causing significant drag in a system with lots of log statements. With deferred string substituion, a log statement will never get expanded if it's not being logged at a given level in the first place.
 
 ### Constants (re-occurring values)
 Logging is more noise than useful if you do not know the context of a log message. Which container is it running on? What environment is it in? Constants can be set up once, and they will stick throughout the lifecycle of a logger:
